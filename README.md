@@ -1,4 +1,6 @@
-# Todo example using Supabase
+#YouTodo (working title) is an open-source task management app that gamifies task management!
+## This project was originally created using the TodoApp example from Supabase.  You can find that original project here https://github.com/supabase/supabase/tree/master/examples/nextjs-todo-list
+
 
 - Frontend:
     - [create-react-app](https://reactjs.org/docs/create-a-new-react-app.html). React Framework for building single-page applications.
@@ -12,32 +14,39 @@
 
 -not added-
 
-## Deploy with Vercel
-
--not added-
+## Getting Started.
+Anyone is welcome to contribute to this project.  To do so, you will need a SupaBase.io account (free), as well as Node JS, and NPM installed on your computer.  This project will contain everything you need to set up your own test DB/API with SupaBase so that you can test and merge back into the master branch to be deployed on the official website.  
 
 ## Build from scratch
-
 ### 1. Create new project
-
 Sign up to Supabase - [https://app.supabase.io](https://app.supabase.io) and create a new project. Wait for your database to start.
 
 ### 2. Run "Todo List" Quickstart
-
-Once your database has started, run the "Todo List" quickstart. Inside of your project, enter the `SQL editor` tab and scroll down until you see `TODO LIST: Build a basic todo list with Row Level Security`  
+Once your database has started, Click "SQL" in the left menu.  Then "+ New Query"  Copy the contents of "StartQuery.sql" and click "run" at the bottom of the SQL window.  This will set up the database/API. 
 
 ### 3. Get the URL and Key
-
 Go to the Project Settings (the cog icon), open the API tab, and find your API URL and `anon` key, you'll need these in the next step.
 
-The `anon` key is your client-side API key. It allows "anonymous access" to your database, until the user has logged in. Once they have logged in, the keys will switch to the user's own login token. This enables row level security for your data. Read more about this [below](#postgres-row-level-security).
+The `anon` key is your client-side API key. It allows "anonymous access" to your database, until the user has logged in. Once they have logged in, the keys will switch to the user's own login token. This enables row level security for your data. 
 
-![image](https://user-images.githubusercontent.com/10214025/88916245-528c2680-d298-11ea-8a71-708f93e1ce4f.png)
+### 4. Clone the REPO and set it up
+Clone this repo (git clone https://github.com/nruffilo/YouTodoProj.git) into the directory you want to be working out of.  Create a file named ".env.local" in the root directory.  You will need to add 2 keys to it.
+REACT_APP_SUPABASE_KEY=(YOUR_SUPABASE_KEY)
+REACT_APP_SUPABASE_URL=(YOUR_SUPABASE_URL)
 
-**_NOTE_**: The `service_role` key has full access to your data, bypassing any security policies. These keys have to be kept secret and are meant to be used in server environments and never on a client or browser.
+Once that is saved, you'll need to get all the NPM packages.  You can do this by running:
+"npm install"
+You'll also need to install tailwind
+"npm install tailwindcss"
 
+(remember to run these from the YouTodoProj directory where the files are, not the directory you initially cloned into.)
 
-You will be asked for a `REACT_APP_SUPABASE_URL` and `REACT_APP_SUPABASE_KEY`. Use the API URL and `anon` key from [step 3](#3.-get-the-url-and-key).
+Once you have this set up, you can run "npm run start" to run a test application and see your code in action!
+
+## Contributing
+Contributions are welcome to all.  I do ask that you look at the issues and attempt to address one of them, but if you see a typo, style, or have an idea for an awesome feature, you're welcome to create a pull request.  For those who are less familiar with git, below is a simple primer on how to create a branch, commit your code, and create a pull request.
+
+"git pull origin dev": This will take the latest codebase in master (the main branch)
 
 ## Supabase details
 
