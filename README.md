@@ -1,4 +1,7 @@
 #YouTodo (working title) is an open-source task management app that gamifies task management!
+
+We have a discord: https://discord.gg/kjTqYFtTYz Feel free to join and chat with other collaborators, get code help, etc.
+
 ## This project was originally created using the TodoApp example from Supabase.  You can find that original project here https://github.com/supabase/supabase/tree/master/examples/nextjs-todo-list
 
 
