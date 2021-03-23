@@ -26,6 +26,7 @@ CREATE TABLE Quest (
   StartDate timestamp WITH time zone null,  
   CompletedDate timestamp WITH time zone null,  
   ExpireDate timestamp WITH time zone null,
+  CreatedByUserId uuid references auth.users not null,
   FOREIGN KEY (ParentQuestId) REFERENCES Quest(QuestId)
 );
   
@@ -64,6 +65,16 @@ CREATE TABLE UserDetail (
 
   
 alter table todos enable row level security;
+ALTER TABLE Quest ENABLE ROW LEVEL SECURITY;
+ALTER TABLE UserQuest ENABLE ROW LEVEL SECURITY;
+
+
+CREATE POLICY "Individuals can create Quests" on Quest FOR ALL
+	WITH CHECK (auth.uid() = CreatedByUserId);
+
+CREATE POLICY "Individuals can link quests" on UserQuest FOR ALL
+	WITH CHECK (auth.uid() = user_id);
+  
 
 create policy "Individuals can create todos." on todos for
     insert with check (auth.uid() = user_id);
