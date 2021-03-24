@@ -1,7 +1,10 @@
 import { useState, useEffect } from "react";
 import { supabase } from "./lib/api";
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Auth from "./components/Auth";
 import Home from "./components/Home";
+import NewQuest from "./components/NewQuest";
+
 
 function App() {
     const [user, setUser] = useState(null);
@@ -23,9 +26,11 @@ function App() {
     }, [user]);
 
     return (
-        <div className="min-w-full min-h-screen flex items-center justify-center bg-gray-200">
-            {!user ? <Auth /> : <Home user={user} />}
-        </div>
+        <>
+            <Layout>
+                <p>Test</p>
+            </Layout>
+        </>        
     );
 }
 

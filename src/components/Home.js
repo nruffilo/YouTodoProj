@@ -1,13 +1,16 @@
 import { useEffect, useState, useRef } from "react";
+import { useHistory } from "react-router-dom";
 import { supabase } from "../lib/api";
 import RecoverPassword from "./RecoverPassword";
 import TodoItem from "./TodoItem";
+import Quest from "./Quest";
 
 const Home = ({ user }) => {
     const [recoveryToken, setRecoveryToken] = useState(null);
-    const [todos, setTodos] = useState([]);
+    const [quests, setQuests] = useState([]);
     const newTaskTextRef = useRef();
     const [errorText, setError] = useState("");
+    const history = useHistory();
 
     useEffect(() => {
         /* Recovery url is of the form
@@ -27,43 +30,24 @@ const Home = ({ user }) => {
             setRecoveryToken(result.access_token);
         }
 
-        fetchTodos().catch(console.error);
+        fetchQuests().catch(console.error);
     }, []);
 
-    const fetchTodos = async () => {
-        let { data: todos, error } = await supabase
-            .from("todos")
+    const fetchQuests = async () => {
+        let { data: quests, error } = await supabase
+            .from("quest")
             .select("*")
             .order("id", { ascending: false });
         if (error) console.log("error", error);
-        else setTodos(todos);
-    };
+        else setQuests(quests);
+    }
 
-    const deleteTodo = async (id) => {
+    const deleteQuest = async (id) => {
         try {
-            await supabase.from("todos").delete().eq("id", id);
-            setTodos(todos.filter((x) => x.id !== id));
+            await supabase.from("quest").delete().eq("id", id);
+            setQuests(quests.filter((x) => x.id !== id));
         } catch (error) {
             console.log("error", error);
-        }
-    };
-
-    const addTodo = async () => {
-        let taskText = newTaskTextRef.current.value;
-        let task = taskText.trim();
-        if (task.length <= 3) {
-            setError("Task length should be more than 3!");
-        } else {
-            let { data: todo, error } = await supabase
-                .from("todos")
-                .insert({ task, user_id: user.id })
-                .single();
-            if (error) setError(error.message);
-            else {
-                setTodos([todo, ...todos]);
-                setError(null);
-                newTaskTextRef.current.value = "";
-            }
         }
     };
 
@@ -98,6 +82,14 @@ const Home = ({ user }) => {
                 >
                     Logout
                 </button>
+                <button
+                    onClick ={() => history.push('/NewQuest')}
+                    className={
+                        "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
+                    }
+                >
+                    + New Quest
+                </button>
             </header>
             <div
                 className={"flex flex-col flex-grow p-4"}
@@ -105,15 +97,15 @@ const Home = ({ user }) => {
             >
                 <div
                     className={`p-2 border flex-grow grid gap-2 ${
-                        todos.length ? "auto-rows-min" : ""
+                        quests.length ? "auto-rows-min" : ""
                     } grid-cols-1 h-2/3 overflow-y-scroll first:mt-8`}
                 >
-                    {todos.length ? (
-                        todos.map((todo) => (
-                            <TodoItem
-                                key={todo.id}
-                                todo={todo}
-                                onDelete={() => deleteTodo(todo.id)}
+                    {quests.length ? (
+                        quests.map((quest) => (
+                            <Quest
+                                key={quest.id}
+                                quest={quest}
+                                onDelete={() => deleteQuest(quest.id)}
                             />
                         ))
                     ) : (
@@ -136,24 +128,7 @@ const Home = ({ user }) => {
                     </div>
                 )}
             </div>
-            <div className={"flex m-4 mt-0 h-10"}>
-                <input
-                    ref={newTaskTextRef}
-                    type="text"
-                    onKeyUp={(e) => e.key === "Enter" && addTodo()}
-                    className={
-                        "bg-gray-200 border px-2 border-gray-300 w-full mr-4"
-                    }
-                />
-                <button
-                    onClick={addTodo}
-                    className={
-                        "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
-                    }
-                >
-                    Add
-                </button>
-            </div>
+            
         </div>
     );
 };
