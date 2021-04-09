@@ -104,3 +104,20 @@ begin
 end;
 $Body$
 LANGUAGE plpgsql VOLATILE;
+	
+--- GET QUESTS
+	
+CREATE OR REPLACE FUNCTION GetQuests()
+RETURNS TABLE (questId int8, questname varchar, questdescription varchar, questatus int4, reward text, size int4, createddate timestamptz, completeddate timestamptz, expiredate timestamptz)
+AS $Body$
+  DECLARE userId uuid;
+begin
+  userId = uid();
+  return 
+    QUERY SELECT 
+            q.QuestId, q.questname, q.questdescription, q.queststatus, q.reward, q.size, q.createddate, q.completeddate, q.expiredate 
+          FROM UserQuest uq LEFT JOIN Quest q ON q.questid = uq.questid 
+          WHERE uq.user_id = userId;
+end;
+$Body$
+LANGUAGE plpgsql VOLATILE;
