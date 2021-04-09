@@ -87,3 +87,20 @@ create policy "Individuals can update their own todos." on todos for
 
 create policy "Individuals can delete their own todos." on todos for
     delete using (auth.uid() = user_id);
+
+	
+--- STORED PROCEDURES TO MAKE CODING EASIER AND MORE LOGICAL
+CREATE OR REPLACE FUNCTION AddNewQuest(questName text, questDescription text, reward text, questSize integer)
+RETURNS integer
+AS $Body$
+  DECLARE newQuestId integer;
+  DECLARE userId uuid;
+begin
+  userId = uid();
+  INSERT INTO quest(questname, questdescription, queststatus, reward, size,createddate, createdbyuserid) 
+    VALUES (questName, questDescription, 1, reward, questSize, current_date, userId) RETURNING questid INTO newQuestId;
+  INSERT INTO userquest (user_id, questid) VALUES (userId, NewQuestId);
+  return 1;
+end;
+$Body$
+LANGUAGE plpgsql VOLATILE;
