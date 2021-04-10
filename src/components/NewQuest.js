@@ -9,7 +9,7 @@ const NewQuest = ({user, returnHome, quests, setQuests}) => {
     const newQuestRewardRef = useRef();
     const newQuestSizeRef = useRef();
 
-    //const [errorText, setError] = useState("");
+    const [errorText, setError] = useState("");
     //const [quests, setQuests] = useState([]);
 
 
@@ -121,6 +121,9 @@ const NewQuest = ({user, returnHome, quests, setQuests}) => {
                         >
                             Cancel
                         </button>
+                    </div>
+                    <div>
+                        {errorText}
                     </div>
                 </div>
         </div>)
