@@ -112,7 +112,7 @@ RETURNS TABLE (questId int8, questname varchar, questdescription varchar, questa
 AS $Body$
   DECLARE userId uuid;
 begin
-  userId = uid();
+  userId = auth.uid();
   return 
     QUERY SELECT 
             q.QuestId, q.questname, q.questdescription, q.queststatus, q.reward, q.size, q.createddate, q.completeddate, q.expiredate 
@@ -121,3 +121,9 @@ begin
 end;
 $Body$
 LANGUAGE plpgsql VOLATILE;
+	
+GRANT EXECUTE ON FUNCTION GetQuests() TO PUBLIC;
+grant usage on schema auth to anon;
+grant usage on schema auth to authenticated;
+
+
