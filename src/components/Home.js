@@ -123,7 +123,7 @@ const Home = ({ user }) => {
                             "text-2xl sm:text-4xl text-white border-b font-sans"
                         }
                     >
-                        Todo List.
+                        You Todo
                     </span>
                     <button
                         onClick={handleLogout}
@@ -136,7 +136,7 @@ const Home = ({ user }) => {
                 </header>
                 <div
                     className={"flex flex-col flex-grow p-4"}
-                    style={{ height: "calc(100vh - 11.5rem)" }}
+                    
                 >
                     <div
                         className={`p-2 border flex-grow grid gap-2 ${
@@ -183,7 +183,7 @@ const Home = ({ user }) => {
                 </div>
             </div>
             case 'NewQuest':
-                return <NewQuest returnHome={returnHome}/>
+                return <NewQuest returnHome={returnHome} setQuests={setQuests} quests={quests}/>
             default: 
                 return null;
         }
