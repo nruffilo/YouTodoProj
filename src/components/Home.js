@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "../lib/api";
 import RecoverPassword from "./RecoverPassword";
 import Quest from "./Quest"
@@ -8,7 +8,6 @@ const Home = ({ user }) => {
     const [recoveryToken, setRecoveryToken] = useState(null);
     const [todos, setTodos] = useState([]);
     const [quests, setQuests] = useState([]);
-    const newTaskTextRef = useRef();
     const [errorText, setError] = useState("");
     const [currentAction, setCurrentAction] = useState("home");
 
@@ -38,7 +37,10 @@ const Home = ({ user }) => {
             .rpc("getquests")
             .select("*")
             .order("questid", { ascending: false });
-        if (error) console.log("error", error);
+        if (error) {
+            console.log("error", error);
+            setError(error);
+        }
         else setQuests(quests);
     }
 
