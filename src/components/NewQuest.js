@@ -1,7 +1,6 @@
 
-import { useEffect, useState, useRef } from "react";
+import {  useState, useRef } from "react";
 import { supabase } from "../lib/api";
-import * as Constants from "../lib/constants";
 
 const NewQuest = ({user, returnHome, quests, setQuests}) => {
 
@@ -10,7 +9,7 @@ const NewQuest = ({user, returnHome, quests, setQuests}) => {
     const newQuestRewardRef = useRef();
     const newQuestSizeRef = useRef();
 
-    const [errorText, setError] = useState("");
+    //const [errorText, setError] = useState("");
     //const [quests, setQuests] = useState([]);
 
 

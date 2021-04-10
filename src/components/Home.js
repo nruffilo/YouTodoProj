@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { supabase } from "../lib/api";
 import RecoverPassword from "./RecoverPassword";
-import TodoItem from "./TodoItem";
 import Quest from "./Quest"
 import NewQuest from "./NewQuest";
 
@@ -43,15 +42,6 @@ const Home = ({ user }) => {
         else setQuests(quests);
     }
 
-    const fetchTodos = async () => {
-        let { data: todos, error } = await supabase
-            .from("todos")
-            .select("*")
-            .order("id", { ascending: false });
-        if (error) console.log("error", error);
-        else setTodos(todos);
-    };
-
     const returnHome = () => {
         setCurrentAction("home");
         console.log("Current action " + currentAction);
@@ -62,40 +52,12 @@ const Home = ({ user }) => {
         console.log("Current action " + currentAction);
     }
 
-    const deleteTodo = async (id) => {
-        try {
-            await supabase.from("todos").delete().eq("id", id);
-            setTodos(todos.filter((x) => x.id !== id));
-        } catch (error) {
-            console.log("error", error);
-        }
-    };
-
     const deleteQuest = async (id) => {
         try {
             await supabase.from("quests").delete().eq("questid", id);
             setTodos(quests.filter((x) => x.id !== id));
         } catch (error) {
             console.log("error", error);
-        }
-    };
-
-    const addTodo = async () => {
-        let taskText = newTaskTextRef.current.value;
-        let task = taskText.trim();
-        if (task.length <= 3) {
-            setError("Task length should be more than 3!");
-        } else {
-            let { data: todo, error } = await supabase
-                .from("todos")
-                .insert({ task, user_id: user.id })
-                .single();
-            if (error) setError(error.message);
-            else {
-                setTodos([todo, ...todos]);
-                setError(null);
-                newTaskTextRef.current.value = "";
-            }
         }
     };
 
