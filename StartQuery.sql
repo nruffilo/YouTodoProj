@@ -72,6 +72,9 @@ ALTER TABLE UserQuest ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Individuals can create Quests" on Quest FOR ALL
 	WITH CHECK (auth.uid() = CreatedByUserId);
 
+CREATE POLICY "Individuals can Get Quests" on Quest FOR SELECT
+	using (auth.uid() = CreatedByUserId);
+
 CREATE POLICY "Individuals can link quests" on UserQuest FOR ALL
 	WITH CHECK (auth.uid() = user_id);
   
