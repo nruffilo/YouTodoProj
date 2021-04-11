@@ -40,6 +40,13 @@ Clone this repo (git clone https://github.com/nruffilo/YouTodoProj.git) into the
 REACT_APP_SUPABASE_KEY=(YOUR_SUPABASE_KEY)
 REACT_APP_SUPABASE_URL=(YOUR_SUPABASE_URL)
 
+Your .env.local file should look something like this:
+```
+REACT_APP_SUPABASE_KEY=alksdjflasdkljfhaksdjfh.kjahsdfkjahsdkfjhasd.kjajhsdkjfhasdkjfhaskdjfh
+REACT_APP_SUPABASE_URL=https://asdfasdfasdfasdf.supabase.co
+```
+
+
 Once that is saved, you'll need to get all the NPM packages.  You can do this by running:
 "npm install"
 You'll also need to install tailwind
