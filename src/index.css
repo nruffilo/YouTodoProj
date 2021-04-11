@@ -40,3 +40,17 @@ body {
 .buttonrow {
   margin-top: 16px;
 }
+
+.heroDisplaySmall {
+  background-color: #CCCCCC;
+}
+
+.characterSheetLabel {
+  width: 100%;
+  display: block;
+  margin-top: 8px;
+}
+
+.smallHeroImage {
+  height: 32px;
+}

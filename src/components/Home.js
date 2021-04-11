@@ -3,6 +3,8 @@ import { supabase } from "../lib/api";
 import RecoverPassword from "./RecoverPassword";
 import Quest from "./Quest"
 import NewQuest from "./NewQuest";
+import Hero from "./Hero";
+import CharacterSheet from "./CharacterSheet";
 
 const Home = ({ user }) => {
     const [recoveryToken, setRecoveryToken] = useState(null);
@@ -10,6 +12,7 @@ const Home = ({ user }) => {
     const [quests, setQuests] = useState([]);
     const [errorText, setError] = useState("");
     const [currentAction, setCurrentAction] = useState("home");
+    const [heroInfo, setHeroInfo] = useState({});
 
     useEffect(() => {
         /* Recovery url is of the form
@@ -30,7 +33,20 @@ const Home = ({ user }) => {
         }
 
         fetchQuests().catch(console.error);
+        fetchHero().catch(console.error);
     }, []);
+
+    const fetchHero = async () => {
+        let { data: hero, error } = await supabase
+            .rpc("gethero")
+            .select("*").single();
+        if (error) {
+            console.log("error", error);
+            setError(error);
+        }
+        else setHeroInfo(hero);
+    }
+
 
     const fetchQuests = async () => {
         let { data: quests, error } = await supabase
@@ -46,12 +62,14 @@ const Home = ({ user }) => {
 
     const returnHome = () => {
         setCurrentAction("home");
-        console.log("Current action " + currentAction);
+    }
+
+    const showCharacterSheet = () => {
+        setCurrentAction("CharacterSheet")
     }
 
     const loadNewQuest = () => {
         setCurrentAction("NewQuest");
-        console.log("Current action " + currentAction);
     }
 
     const deleteQuest = async (id) => {
@@ -89,6 +107,7 @@ const Home = ({ user }) => {
                     >
                         You Todo
                     </span>
+                    <Hero user={user} heroInfo={heroInfo} showCharacterSheet={showCharacterSheet} setError={setError}></Hero>
                     <button
                         onClick={handleLogout}
                         className={
@@ -147,7 +166,9 @@ const Home = ({ user }) => {
                 </div>
             </div>
             case 'NewQuest':
-                return <NewQuest returnHome={returnHome} setQuests={setQuests} quests={quests}/>
+                return <NewQuest returnHome={returnHome} setQuests={setQuests} quests={quests} heroInfo={heroInfo}/>
+            case 'CharacterSheet':
+                return <CharacterSheet user={user} heroInfo={heroInfo} returnHome={returnHome} setHeroInfo={setHeroInfo}/>
             default: 
                 return null;
         }
