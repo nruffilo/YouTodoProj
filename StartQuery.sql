@@ -94,6 +94,9 @@ ALTER TABLE UserDetail ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Individuals can create Quests" on Quest FOR ALL
 	WITH CHECK (auth.uid() = CreatedByUserId);
 
+CREATE POLICY "Individuals can Get Quests" on Quest FOR SELECT
+	using (auth.uid() = CreatedByUserId);
+
 CREATE POLICY "Individuals can link quests" on UserQuest FOR ALL
 	WITH CHECK (auth.uid() = user_id);
   
@@ -118,4 +121,41 @@ create policy "Individuals can create user details." on userdetail for
 
 create policy "Individuals can view their own details" on userdetail FOR
     select using (auth.uid() = user_id);
+	
+--- STORED PROCEDURES TO MAKE CODING EASIER AND MORE LOGICAL
+CREATE OR REPLACE FUNCTION AddNewQuest(questName text, questDescription text, reward text, questSize text)
+RETURNS integer
+AS $Body$
+  DECLARE newQuestId integer;
+  DECLARE userId uuid;
+begin
+  userId = auth.uid();
+  INSERT INTO quest(questname, questdescription, queststatus, reward, size,createddate, createdbyuserid) 
+    VALUES (questName, questDescription, 1, reward, cast(questSize as integer), current_date, userId) RETURNING questid INTO newQuestId;
+  INSERT INTO userquest (user_id, questid) VALUES (userId, NewQuestId);
+  return NewQuestId;
+end;
+$Body$
+LANGUAGE plpgsql VOLATILE;
+	
+--- GET QUESTS
+	
+CREATE OR REPLACE FUNCTION GetQuests()
+RETURNS TABLE (questId int8, questname varchar, questdescription varchar, questatus int4, reward text, size int4, createddate timestamptz, completeddate timestamptz, expiredate timestamptz)
+AS $Body$
+  DECLARE userId uuid;
+begin
+  userId = auth.uid();
+  return 
+    QUERY SELECT 
+            q.QuestId, q.questname, q.questdescription, q.queststatus, q.reward, q.size, q.createddate, q.completeddate, q.expiredate 
+          FROM UserQuest uq LEFT JOIN Quest q ON q.questid = uq.questid 
+          WHERE uq.user_id = userId;
+end;
+$Body$
+LANGUAGE plpgsql VOLATILE;
+	
+GRANT EXECUTE ON FUNCTION GetQuests() TO PUBLIC;
+grant usage on schema auth to anon;
+grant usage on schema auth to authenticated;
 
