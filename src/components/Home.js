@@ -73,7 +73,7 @@ const Home = ({ user }) => {
     const completeQuest = async (questId) => {
         let { data , error } = await supabase
             .rpc("CompleteQuest", {completedQuestId: questId}).single();
-        if (error) setError(error.message);
+        if (error) setError(error.message + data);
         else {
             fetchQuests();
             returnHome();
