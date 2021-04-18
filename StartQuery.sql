@@ -90,8 +90,11 @@ ALTER TABLE UserQuest ENABLE ROW LEVEL SECURITY;
 ALTER TABLE UserDetail ENABLE ROW LEVEL SECURITY;
 ALTER TABLE Reward ENABLE ROW LEVEL SECURITY;
 
-CREATE POLICY "Individuals can create Quests" on Quest FOR ALL
+CREATE POLICY "Individuals can create Quests" on quest FOR INSERT
 	WITH CHECK (auth.uid() = CreatedByUserId);
+
+CREATE POLICY "Individuals can update quests" ON Quest FOR UPDATE
+  USING (auth.uid() = CreatedByUserId);
 
 CREATE POLICY "Individuals can Get Quests" on Quest FOR SELECT
 	using (auth.uid() = CreatedByUserId);
@@ -151,26 +154,27 @@ begin
     QUERY SELECT 
             q.QuestId, q.questname, q.questdescription, q.queststatus, q.reward, q.size, q.createddate, q.completeddate, q.expiredate 
           FROM UserQuest uq LEFT JOIN Quest q ON q.questid = uq.questid 
-          WHERE uq.user_id = userId;
+          WHERE uq.user_id = userId AND q.queststatus = 1;
 end;
 $Body$
 LANGUAGE plpgsql VOLATILE;
 	
 --- COMPLETE QUEST
-CREATE OR REPLACE FUNCTION CompleteQuest(questId bigint)
+CREATE OR REPLACE FUNCTION "CompleteQuest"("completedQuestId" bigint)
 RETURNS integer
 AS $Body$
   DECLARE userId uuid;
   DECLARE QuestReward text;
   DECLARE QuestSize int;
   DECLARE xpValue int;
+  DECLARE completedQuestId int;
 begin
   userId = auth.uid();
   --Check to see if this quest ID is owned by this user
-  IF EXISTS (SELECT questId FROM userquest WHERE questid = questId AND user_id = userId) THEN
-    SELECT reward, size INTO QuestReward, QuestSize FROM quest WHERE questid = questId;
-    UPDATE quest SET completeddate = current_date, queststatus = 2 WHERE questid = questId;
-    INSERT INTO reward (user_id, reward) VALUES (userId, QuestResult[0].reward);
+  IF EXISTS (SELECT questId FROM userquest WHERE questid = completedQuestId AND user_id = userId) THEN
+    SELECT reward, size INTO QuestReward, QuestSize FROM quest WHERE questid = completedQuestId;
+    UPDATE quest SET completeddate = current_date, queststatus = 2 WHERE questid = completedQuestId;
+    INSERT INTO reward (user_id, reward) VALUES (userId, QuestReward);
     CASE 
       WHEN QuestSize = 1 THEN xpValue = 100;
       WHEN QuestSize = 2 THEN xpValue = 400;
@@ -188,6 +192,8 @@ LANGUAGE plpgsql VOLATILE;
 --Permissions for functions/stored proceedures to access the auth
 
 GRANT EXECUTE ON FUNCTION GetQuests() TO PUBLIC;
+GRANT EXECUTE ON FUNCTION CompleteQuest(questIdText text) TO PUBLIC;
+
 grant usage on schema auth to anon;
 grant usage on schema auth to authenticated;
 

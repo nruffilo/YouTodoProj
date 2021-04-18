@@ -5,6 +5,7 @@ import Quest from "./Quest"
 import NewQuest from "./NewQuest";
 import Hero from "./Hero";
 import CharacterSheet from "./CharacterSheet";
+import CompleteQuest from "./CompleteQuest";
 
 const Home = ({ user }) => {
     const [recoveryToken, setRecoveryToken] = useState(null);
@@ -13,6 +14,7 @@ const Home = ({ user }) => {
     const [errorText, setError] = useState("");
     const [currentAction, setCurrentAction] = useState("home");
     const [heroInfo, setHeroInfo] = useState({});
+    const [questToComplete, setQuestToComplete] = useState({});
 
     useEffect(() => {
         /* Recovery url is of the form
@@ -65,11 +67,26 @@ const Home = ({ user }) => {
     }
 
     const showCharacterSheet = () => {
-        setCurrentAction("CharacterSheet")
+        setCurrentAction("CharacterSheet");
+    }
+
+    const completeQuest = async (questId) => {
+        let { data , error } = await supabase
+            .rpc("CompleteQuest", {completedQuestId: questId}).single();
+        if (error) setError(error.message);
+        else {
+            fetchQuests();
+            returnHome();
+        }
     }
 
     const loadNewQuest = () => {
         setCurrentAction("NewQuest");
+    }
+
+    const confirmCompleteQuest = (quest) => {
+        setQuestToComplete(quest);
+        setCurrentAction("CompleteQuest");
     }
 
     const deleteQuest = async (id) => {
@@ -132,6 +149,7 @@ const Home = ({ user }) => {
                                     questId={quest.questid}
                                     quest={quest}
                                     onDelete={() => deleteQuest(quest.questid)}
+                                    onComplete={() => confirmCompleteQuest(quest)}
                                 />
                             ))
                         ) : (
@@ -169,6 +187,8 @@ const Home = ({ user }) => {
                 return <NewQuest returnHome={returnHome} setQuests={setQuests} quests={quests} heroInfo={heroInfo}/>
             case 'CharacterSheet':
                 return <CharacterSheet user={user} heroInfo={heroInfo} returnHome={returnHome} setHeroInfo={setHeroInfo}/>
+            case 'CompleteQuest':
+                return <CompleteQuest user={user} quest={questToComplete} completeQuest={completeQuest} returnHome={returnHome}></CompleteQuest>
             default: 
                 return null;
         }
