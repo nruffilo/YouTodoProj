@@ -7,7 +7,7 @@ const CompleteQuest = ({user, quest, completeQuest, returnHome}) => {
             {quest.questdescription}
         </div>
         <div>
-            <button className={"w-half completeQuestButton floatLeft justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"} onClick={() => completeQuest(quest.questid)}>
+            <button className={"w-half completeQuestButton floatLeft justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"} onClick={() => completeQuest(quest)}>
                 Complete!
             </button>
             <button className={"w-half cancelCompleteQuestButton floatRight justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"} onClick={returnHome}>
