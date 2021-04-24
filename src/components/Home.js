@@ -6,6 +6,7 @@ import NewQuest from "./NewQuest";
 import Hero from "./Hero";
 import CharacterSheet from "./CharacterSheet";
 import CompleteQuest from "./CompleteQuest";
+import QuestCompleted from "./QuestCompleted";
 
 const Home = ({ user }) => {
     const [recoveryToken, setRecoveryToken] = useState(null);
@@ -70,13 +71,13 @@ const Home = ({ user }) => {
         setCurrentAction("CharacterSheet");
     }
 
-    const completeQuest = async (questId) => {
+    const completeQuest = async (quest) => {
         let { data , error } = await supabase
-            .rpc("CompleteQuest", {completedQuestId: questId}).single();
+            .rpc('completequest', {completedquestid: quest.questid});
         if (error) setError(error.message + data);
         else {
             fetchQuests();
-            returnHome();
+            setCurrentAction("QuestCompleted");
         }
     }
 
@@ -189,6 +190,8 @@ const Home = ({ user }) => {
                 return <CharacterSheet user={user} heroInfo={heroInfo} returnHome={returnHome} setHeroInfo={setHeroInfo}/>
             case 'CompleteQuest':
                 return <CompleteQuest user={user} quest={questToComplete} completeQuest={completeQuest} returnHome={returnHome}></CompleteQuest>
+            case 'QuestCompleted':
+                return <QuestCompleted returnHome={returnHome} quest={questToComplete}></QuestCompleted>
             default: 
                 return null;
         }

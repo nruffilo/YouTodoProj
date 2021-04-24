@@ -160,20 +160,19 @@ $Body$
 LANGUAGE plpgsql VOLATILE;
 	
 --- COMPLETE QUEST
-CREATE OR REPLACE FUNCTION "CompleteQuest"("completedQuestId" bigint)
+CREATE OR REPLACE FUNCTION completequest(completedquestid bigint)
 RETURNS integer
 AS $Body$
   DECLARE userId uuid;
   DECLARE QuestReward text;
   DECLARE QuestSize int;
   DECLARE xpValue int;
-  DECLARE completedQuestId int;
 begin
   userId = auth.uid();
   --Check to see if this quest ID is owned by this user
-  IF EXISTS (SELECT questId FROM userquest WHERE questid = completedQuestId AND user_id = userId) THEN
-    SELECT reward, size INTO QuestReward, QuestSize FROM quest WHERE questid = completedQuestId;
-    UPDATE quest SET completeddate = current_date, queststatus = 2 WHERE questid = completedQuestId;
+  IF EXISTS (SELECT questId FROM userquest WHERE questid = completedquestid AND user_id = userId) THEN
+    SELECT reward, size INTO QuestReward, QuestSize FROM quest WHERE questid = completedquestid;
+    UPDATE quest SET completeddate = current_date, queststatus = 2 WHERE questid = completedquestid;
     INSERT INTO reward (user_id, reward) VALUES (userId, QuestReward);
     CASE 
       WHEN QuestSize = 1 THEN xpValue = 100;
@@ -192,7 +191,8 @@ LANGUAGE plpgsql VOLATILE;
 --Permissions for functions/stored proceedures to access the auth
 
 GRANT EXECUTE ON FUNCTION GetQuests() TO PUBLIC;
-GRANT EXECUTE ON FUNCTION CompleteQuest(questIdText text) TO PUBLIC;
+GRANT EXECUTE ON FUNCTION completequest(completedquestid bigint) TO PUBLIC;
+
 
 grant usage on schema auth to anon;
 grant usage on schema auth to authenticated;
