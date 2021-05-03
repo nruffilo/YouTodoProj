@@ -187,27 +187,47 @@ end;
 $Body$
 LANGUAGE plpgsql VOLATILE;
 
+CREATE OR REPLACE FUNCTION GetPartyAndUsers() 
+RETURNS TABLE(partyId bigint, partyName text, partyUserId uuid, partyUserEmail text)
+AS $Body$
+  DECLARE userId uuid;
+begin
+  userId = auth.uid();
+  return 
+    QUERY SELECT 
+            p.PartyId, p.PartyName, up.user_id, u.email 
+          FROM 
+            UserParty up 
+            LEFT JOIN Party p ON p.PartyId = up.PartyId
+            LEFT JOIN auth.users u ON u.user_id = up.user_id
+          WHERE up.PartyId IN (SELECT PartyId FROM UserParty WHERE user_id = userId);
+end;
+$Body$
+LANGUAGE plpgsql VOLATILE;
 
 --- Create quest for party member
-CREATE OR REPLACE FUNCTION CreateQuestForPartyMember(questName text, questDescription text, reward text, questSize text)
+CREATE OR REPLACE FUNCTION CreateQuestForPartyMember(questName text, questDescription text, reward text, questSize text, targetUserId uuid)
 RETURNS integer
 AS $Body$
   DECLARE newQuestId integer;
   DECLARE userId uuid;
 begin
   userId = auth.uid();
-  INSERT INTO quest(questname, questdescription, queststatus, reward, size,createddate, createdbyuserid) 
-    VALUES (questName, questDescription, 1, reward, cast(questSize as integer), current_date, userId) RETURNING questid INTO newQuestId;
-  INSERT INTO userquest (user_id, questid) VALUES (userId, NewQuestId);
-  return NewQuestId;
+  --check to see if this is a party admin for the target user
+  IF EXISTS (SELECT user_id FROM UserGroup WHERE GroupId IN (SELECT groupid FROM usergroup WHERE user_id = targetUserId) AND user_id = userId AND roleid = 3) THEN
+    INSERT INTO quest(questname, questdescription, queststatus, reward, size,createddate, createdbyuserid) 
+      VALUES (questName, questDescription, 1, reward, cast(questSize as integer), current_date, userId) RETURNING questid INTO newQuestId;
+    INSERT INTO userquest (targetUserId, questid) VALUES (userId, NewQuestId);
+    return NewQuestId;
+  ELSE 
+    return 0;
+  END IF;
 end;
 $Body$
 LANGUAGE plpgsql VOLATILE;
-
-  
+ 
 	
 --- GET QUESTS
-	
 CREATE OR REPLACE FUNCTION GetQuests()
 RETURNS TABLE (questId int8, questname varchar, questdescription varchar, questatus int4, reward text, size int4, createddate timestamptz, completeddate timestamptz, expiredate timestamptz)
 AS $Body$
@@ -257,6 +277,9 @@ LANGUAGE plpgsql VOLATILE;
 GRANT EXECUTE ON FUNCTION GetQuests() TO PUBLIC;
 GRANT EXECUTE ON FUNCTION completequest(completedquestid bigint) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION createnewparty(partyname text) TO PUBLIC;
+GRANT EXECUTE ON FUNCTION addpartymember(partyid int, newmemberemail text) TO PUBLIC;
+GRANT EXECUTE ON FUNCTION createquestforpartymember(questname text, questdescription text, reward text, questsize text, targetuserid uuid)
+GRANT EXECUTE ON FUNCTION GetPartyAndUsers() 
 
 
 grant usage on schema auth to anon;

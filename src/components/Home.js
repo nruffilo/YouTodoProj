@@ -16,6 +16,7 @@ const Home = ({ user }) => {
     const [currentAction, setCurrentAction] = useState("home");
     const [heroInfo, setHeroInfo] = useState({});
     const [questToComplete, setQuestToComplete] = useState({});
+    const [partyUsers, setPartyUsers] = useState({});
 
     useEffect(() => {
         /* Recovery url is of the form
@@ -37,6 +38,7 @@ const Home = ({ user }) => {
 
         fetchQuests().catch(console.error);
         fetchHero().catch(console.error);
+        fetchPartyUsers().catch(console.error);
     }, []);
 
     const fetchHero = async () => {
@@ -50,6 +52,14 @@ const Home = ({ user }) => {
         else setHeroInfo(hero);
     }
 
+    const fetchPartyUsers = async () => {
+        let { data: partyUserResult, error } = await supabase
+            .rpc("getpartyandusers");
+        if (error) {
+            console.log("error",error);
+            setError(error);
+        } else setPartyUsers(partyUserResult);
+    }
 
     const fetchQuests = async () => {
         let { data: quests, error } = await supabase
@@ -192,6 +202,8 @@ const Home = ({ user }) => {
                 return <CompleteQuest user={user} quest={questToComplete} completeQuest={completeQuest} returnHome={returnHome}></CompleteQuest>
             case 'QuestCompleted':
                 return <QuestCompleted returnHome={returnHome} quest={questToComplete}></QuestCompleted>
+            case 'Party':
+                return <Party returnHome={returnHome} user={user} partyUsers={partyUsers}></Party>
             default: 
                 return null;
         }
