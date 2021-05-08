@@ -1,18 +1,43 @@
 
-import {  useState, useRef } from "react";
+import { useState, useRef } from "react";
 import { supabase } from "../lib/api";
 
-const Party = ({user, returnHome, quests, setQuests, partyUsers}) => {
+const Party = ({user, returnHome, quests, setQuests, partyUsers, fetchPartyUsers}) => {
 
     const newPartyTextRef = useRef();
-    const newQuestDescriptionRef = useRef();
-    const newQuestRewardRef = useRef();
-    const newQuestSizeRef = useRef();
 
     const [errorText, setError] = useState("");
-    const [partyUsers, setPartyUsers] = useState([]);
+    const [partyUsersMap, setPartyUsersMap] = useState([]);
+
+    useEffect(() => {
+        sortPartyUsersMap;            
+    });
+
+    const sortPartyUsersMap = () => {
+        let partyUsersMapClean = [];
+        partyUsers.forEach(partyUser => {
+            //check to see if we have already created the party id, if not, create it.
+            if (typeof(partyUsersMapClean[partyUser.PartyId]) == "undefined") {
+                partyUsersMapClean[partyUser.PartyId] = {PartyName: partyUser.PartyName, PartyUsers: []}
+            }
+            partyUsersMapClean[partyUser.PartyId].PartyUsers.add({user_id: partyUser.user_id, Email: partyUser.Email});
+        });
+        setPartyUsersMap(partyUsersMapClean);
+    };
 
     //const [quests, setQuests] = useState([]);
+    const addPartyUser = (partyId, userEmail) => {
+        let { data: newPartyUserId, error } = await supabase
+            .rpc("addPartyMember", {partyid: partyId, newuseremail: userEmail});
+        if (error) {
+            console.log("error", error);
+            setError(error);
+        } else {
+            fetchPartyUsers();
+            sortPartyUsersMap();
+        }
+        
+    }
 
     return (<div className={"PartyScreen"}>
                 <h2>Party</h2>
@@ -37,6 +62,25 @@ const Party = ({user, returnHome, quests, setQuests, partyUsers}) => {
                         >
                             Create New Party
                         </button>
+                </div>
+
+                <div className={"PartyUsers"}>
+                {partyUsers.length ? (
+                            partyUsersMap.map((partyInfo) => (
+                                <PartyInfo 
+                                    partyInfo={partyInfo}
+                                    addPartyUser={addPartyUser}
+                                />
+                            ))
+                        ) : (
+                            <span
+                                className={
+                                    "h-full flex justify-center items-center"
+                                }
+                            >
+                                You do not have any parties yet.
+                            </span>
+                        )}
                 </div>
 
 

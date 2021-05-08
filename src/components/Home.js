@@ -203,7 +203,7 @@ const Home = ({ user }) => {
             case 'QuestCompleted':
                 return <QuestCompleted returnHome={returnHome} quest={questToComplete}></QuestCompleted>
             case 'Party':
-                return <Party returnHome={returnHome} user={user} partyUsers={partyUsers}></Party>
+                return <Party fetchPartyUsers={fetchPartyUsers} returnHome={returnHome} user={user} partyUsers={partyUsers}></Party>
             default: 
                 return null;
         }
