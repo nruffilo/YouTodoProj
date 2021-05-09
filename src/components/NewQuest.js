@@ -2,12 +2,13 @@
 import {  useState, useRef } from "react";
 import { supabase } from "../lib/api";
 
-const NewQuest = ({user, returnHome, quests, setQuests}) => {
+const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
 
     const newQuestTextRef = useRef();
     const newQuestDescriptionRef = useRef();
     const newQuestRewardRef = useRef();
     const newQuestSizeRef = useRef();
+    const newQuestUserRef = useRef();
 
     const [errorText, setError] = useState("");
     //const [quests, setQuests] = useState([]);
@@ -57,6 +58,30 @@ const NewQuest = ({user, returnHome, quests, setQuests}) => {
     return (<div className={"addNewQuest"}>
         <h2>Add New Quest</h2>
                 <div className={"m-4 mt-0 h-10"}>
+                    {
+                        partyUsers.length > 1 ? (
+                            <label>
+                                Create Quest For:
+                                <select
+                                    ref={newQuestUserRef}
+                                    type="select"
+                                    className={"bg-gray-200 border px-2 border-gray-300 w-full mr-4"}>
+                                        <option value={user.user_id} selected>Yourself</option>
+                                        {
+                                            partyUsers.map((partyUser) => (
+                                                <option value={partyUser.user_id}>{partyUser.email}</option>
+                                            ))
+                                        }
+
+                                </select>
+                            </label>
+                        ) : (
+                            <span/>
+                        )
+                    }
+                    <label>
+
+                    </label>
                     <label>
                         Quest Name:
                         <input
