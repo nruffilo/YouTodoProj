@@ -65,12 +65,18 @@ const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
                                 <select
                                     ref={newQuestUserRef}
                                     type="select"
-                                    className={"bg-gray-200 border px-2 border-gray-300 w-full mr-4"}>
-                                        <option value={user.user_id} selected>Yourself</option>
+                                    className={"bg-gray-200 border px-2 border-gray-300 w-full mr-4"}
+                                    defaultValue={user.id}
+                                    >
+                                        <option value={user.id}>Yourself</option>
                                         {
-                                            partyUsers.map((partyUser) => (
-                                                <option value={partyUser.user_id}>{partyUser.email}</option>
-                                            ))
+                                            partyUsers.map((partyUser) => {
+                                                if (user.id != partyUser.partyuserid) {
+                                                    return <option value={partyUser.partyuserid}>{partyUser.displayname}</option>
+                                                }
+                                                return '';
+                                            }
+                                            )
                                         }
 
                                 </select>

@@ -205,7 +205,7 @@ const Home = ({ user }) => {
                 </div>
             </div>
             case 'NewQuest':
-                return <NewQuest returnHome={returnHome} setQuests={setQuests} quests={quests} heroInfo={heroInfo} partyUsers={partyUsers}/>
+                return <NewQuest returnHome={returnHome} setQuests={setQuests} quests={quests} heroInfo={heroInfo} user={user} partyUsers={partyUsers}/>
             case 'CharacterSheet':
                 return <CharacterSheet user={user} heroInfo={heroInfo} returnHome={returnHome} setHeroInfo={setHeroInfo}/>
             case 'CompleteQuest':

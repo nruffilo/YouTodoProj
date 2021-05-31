@@ -130,8 +130,8 @@ create policy "Individuals can update their own user details." on userdetail for
 create policy "Individuals can create user details." on userdetail for
     insert with check (auth.uid() = user_id);
 
-create policy "Individuals can view their own details" on userdetail FOR
-    select using (auth.uid() = user_id);
+create policy "everyone can view user details" on userdetail FOR
+    select using (true);
 	
 --- STORED PROCEDURES TO MAKE CODING EASIER AND MORE LOGICAL
 CREATE OR REPLACE FUNCTION AddNewQuest(questName text, questDescription text, reward text, questSize text)
@@ -165,23 +165,27 @@ $Body$
 LANGUAGE plpgsql VOLATILE;
 
 --- Add Party Member
-CREATE OR REPLACE FUNCTION AddPartyMember(insertpartyid int, newMemberEmail text)
+CREATE OR REPLACE FUNCTION AddPartyMember(insertpartyid int, newMemberText text)
 RETURNS integer
 AS $Body$
   DECLARE userId uuid;
   DECLARE userRoleId int4;
   DECLARE newUserId uuid;
+  DECLARE userDisplayName text;
+  DECLARE userChecksum text;
 begin
+  SELECT split_part(newMemberText,'#',1) as udn, split_part(newMemberText,'#',2) as ucs INTO userDisplayName, userChecksum;
   userId = auth.uid();
+ 
   -- check to see if the user is an admin of the party
   SELECT RoleId INTO userRoleId FROM UserParty WHERE userparty.PartyId = insertpartyid AND user_id = userId;
   -- get the USER of the email requested
-  SELECT id INTO newUserId FROM auth.users WHERE email = newMemberEmail; 
-  IF (userRoleId = 3) THEN 
+  SELECT user_id INTO newUserId FROM userdetail WHERE displayname = userDisplayName AND user_id::text LIKE userChecksum || '%';
+  IF (userRoleId = 3 AND newUserId IS NOT null) THEN 
     INSERT INTO UserParty(user_id, PartyId, RoleId) VALUES (newUserId, insertpartyid,1);
-    return NewQuestId;
-  ELSE  
     RETURN 1;
+  ELSE  
+    RETURN -1;
   END IF;
 end;
 $Body$
@@ -277,7 +281,7 @@ LANGUAGE plpgsql VOLATILE;
 GRANT EXECUTE ON FUNCTION GetQuests() TO PUBLIC;
 GRANT EXECUTE ON FUNCTION completequest(completedquestid bigint) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION createnewparty(partyname text) TO PUBLIC;
-GRANT EXECUTE ON FUNCTION addpartymember(partyid int, newmemberemail text) TO PUBLIC;
+GRANT EXECUTE ON FUNCTION addpartymember(insertpartyid int, newmembertext text) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION createquestforpartymember(questname text, questdescription text, reward text, questsize text, targetuserid uuid)
 GRANT EXECUTE ON FUNCTION GetPartyAndUsers() 
 

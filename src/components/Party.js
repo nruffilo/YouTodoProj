@@ -29,12 +29,12 @@ const Party = ({user, returnHome, quests, setQuests, partyUsers, fetchPartyUsers
     };
 
     //const [quests, setQuests] = useState([]);
-    const addPartyUser = async (partyId, userEmail) => {
+    const addPartyUser = async (partyId, userText) => {
         console.log("About to add ");
         console.log(partyId);
-        console.log(userEmail);
+        console.log(userText);
         let { data: newPartyUserId, error } = await supabase
-            .rpc("addpartymember", {insertpartyid: partyId, newmemberemail: userEmail});
+            .rpc("addpartymember", {insertpartyid: partyId, newmembertext: userText});
         if (error) {
             console.log("error", error);
             setError(error);

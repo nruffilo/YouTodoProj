@@ -22,10 +22,10 @@ const PartyInfo = ({partyInfo,addPartyUser, partyUsersMap, returnHome})  => {
                     } 
                     <div className={"m-4 mt-0 h-10"}>
                         <label>
-                            Email:
                             <input
                                 ref={newPartyUserTextRef}
                                 type="text"
+                                placeholder="MemberName#1234"
                                 className={
                                     "bg-gray-200 border px-2 border-gray-300 w-full mr-4"
                                 }
