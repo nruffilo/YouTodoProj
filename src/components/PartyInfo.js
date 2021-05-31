@@ -1,20 +1,20 @@
 import { useState, useRef } from "react";
 
-const PartyInfo = ({partyInfo,addPartyUser})  => {
+const PartyInfo = ({partyInfo,addPartyUser, partyUsersMap, returnHome})  => {
     const newPartyUserTextRef = useRef();
     const [errorText, setError] = useState("");
 
     const addPartyUserForThisParty = () => {
-        addPartyUser(partyInfo.PartyId, newPartyUserTextRef.value);
+        addPartyUser(partyInfo.PartyId, newPartyUserTextRef.current.value);
     }
 
     return (<div className={"PartyInfo"}>
                 <h3>{partyInfo.PartyName}</h3>
                 <div className={"CreateParty"}>
                     {
-                        partyInfo.partyUsers.length > 0 ? (
-                            partyInfo.partyUsers.map((partyUser) => (
-                                <div className={"PartyUser"}>{partyUser.Email}</div>
+                        partyInfo.PartyUsers.length > 0 ? (
+                            partyInfo.PartyUsers.map((partyUser) => (
+                                <div className={"PartyUser"}>{partyUser.displayname}</div>
                             ))
                         ) : (
                             <span>No members of this party</span>
@@ -40,36 +40,6 @@ const PartyInfo = ({partyInfo,addPartyUser})  => {
                         >
                             Add to Party
                         </button>
-                </div>
-
-                <div className={"PartyUsers"}>
-                {partyUsers.length ? (
-                            partyUsersMap.map((partyInfo) => (
-                                <PartyInfo 
-                                    partyInfo={partyInfo}
-                                />
-                            ))
-                        ) : (
-                            <span
-                                className={
-                                    "h-full flex justify-center items-center"
-                                }
-                            >
-                                You do not have any parties yet.
-                            </span>
-                        )}
-                </div>
-
-
-                <div className={"CreatePartyFooter"}>
-                    <button
-                            onClick={returnHome}
-                            className={
-                                "floatRight justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
-                            }
-                        >
-                        Home
-                    </button>
                 </div>
 
     </div>)
