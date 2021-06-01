@@ -2,12 +2,13 @@
 import {  useState, useRef } from "react";
 import { supabase } from "../lib/api";
 
-const NewQuest = ({user, returnHome, quests, setQuests}) => {
+const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
 
     const newQuestTextRef = useRef();
     const newQuestDescriptionRef = useRef();
     const newQuestRewardRef = useRef();
     const newQuestSizeRef = useRef();
+    const newQuestUserRef = useRef();
 
     const [errorText, setError] = useState("");
     //const [quests, setQuests] = useState([]);
@@ -18,6 +19,7 @@ const NewQuest = ({user, returnHome, quests, setQuests}) => {
         let questDesc = newQuestDescriptionRef.current.value;
         let questSize = Number(parseInt(newQuestSizeRef.current.value));
         let questReward = newQuestRewardRef.current.value;
+        let questUserId = newQuestUserRef.current.value;
         let quest = questText.trim();
         if (quest.length <= 1) {
             setError("Quest needs at least 1 character");
@@ -27,7 +29,8 @@ const NewQuest = ({user, returnHome, quests, setQuests}) => {
                     questdescription: questDesc, 
                     questsize: questSize, 
                     reward: questReward, 
-                    questname: questText
+                    questname: questText,
+                    newquestuserid: questUserId
                 }).single();
             if (error) setError(error.message);
             else {
@@ -57,6 +60,36 @@ const NewQuest = ({user, returnHome, quests, setQuests}) => {
     return (<div className={"addNewQuest"}>
         <h2>Add New Quest</h2>
                 <div className={"m-4 mt-0 h-10"}>
+                    {
+                        partyUsers.length > 1 ? (
+                            <label>
+                                Create Quest For:
+                                <select
+                                    ref={newQuestUserRef}
+                                    type="select"
+                                    className={"bg-gray-200 border px-2 border-gray-300 w-full mr-4"}
+                                    defaultValue={user.id}
+                                    >
+                                        <option key={user.id} value={user.id}>Yourself</option>
+                                        {
+                                            partyUsers.map((partyUser) => {
+                                                if (user.id !== partyUser.partyuserid) {
+                                                    return <option key={partyUser.partyuserid} value={partyUser.partyuserid}>{partyUser.displayname}</option>
+                                                }
+                                                return '';
+                                            }
+                                            )
+                                        }
+
+                                </select>
+                            </label>
+                        ) : (
+                            <span/>
+                        )
+                    }
+                    <label>
+
+                    </label>
                     <label>
                         Quest Name:
                         <input

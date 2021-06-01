@@ -7,6 +7,7 @@ import Hero from "./Hero";
 import CharacterSheet from "./CharacterSheet";
 import CompleteQuest from "./CompleteQuest";
 import QuestCompleted from "./QuestCompleted";
+import Party from "./Party";
 
 const Home = ({ user }) => {
     const [recoveryToken, setRecoveryToken] = useState(null);
@@ -16,7 +17,9 @@ const Home = ({ user }) => {
     const [currentAction, setCurrentAction] = useState("home");
     const [heroInfo, setHeroInfo] = useState({});
     const [questToComplete, setQuestToComplete] = useState({});
+    const [partyUsers, setPartyUsers] = useState([]);
 
+    
     useEffect(() => {
         /* Recovery url is of the form
          * <SITE_URL>#access_token=x&refresh_token=y&expires_in=z&token_type=bearer&type=recovery
@@ -37,6 +40,7 @@ const Home = ({ user }) => {
 
         fetchQuests().catch(console.error);
         fetchHero().catch(console.error);
+        fetchPartyUsers().catch(console.error);
     }, []);
 
     const fetchHero = async () => {
@@ -50,6 +54,14 @@ const Home = ({ user }) => {
         else setHeroInfo(hero);
     }
 
+    const fetchPartyUsers = async () => {
+        let { data: partyUserResult, error } = await supabase
+            .rpc("getpartyandusers");
+        if (error) {
+            console.log("error",error);
+            setError(error);
+        } else setPartyUsers(partyUserResult);
+    }
 
     const fetchQuests = async () => {
         let { data: quests, error } = await supabase
@@ -67,6 +79,9 @@ const Home = ({ user }) => {
         setCurrentAction("home");
     }
 
+    const loadPartyScreen = () => {
+        setCurrentAction("Party");
+    }
     const showCharacterSheet = () => {
         setCurrentAction("CharacterSheet");
     }
@@ -177,21 +192,29 @@ const Home = ({ user }) => {
                     <button
                         onClick={loadNewQuest}
                         className={
-                            "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
+                            "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out giveMeSomeSpace"
                         }
                     >
                         Add
                     </button>
+                    <button
+                        onClick={loadPartyScreen}
+                        className={
+                            "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out giveMeSomeSpace"
+                        }
+                        >Party</button>
                 </div>
             </div>
             case 'NewQuest':
-                return <NewQuest returnHome={returnHome} setQuests={setQuests} quests={quests} heroInfo={heroInfo}/>
+                return <NewQuest returnHome={returnHome} setQuests={setQuests} quests={quests} heroInfo={heroInfo} user={user} partyUsers={partyUsers}/>
             case 'CharacterSheet':
                 return <CharacterSheet user={user} heroInfo={heroInfo} returnHome={returnHome} setHeroInfo={setHeroInfo}/>
             case 'CompleteQuest':
                 return <CompleteQuest user={user} quest={questToComplete} completeQuest={completeQuest} returnHome={returnHome}></CompleteQuest>
             case 'QuestCompleted':
                 return <QuestCompleted returnHome={returnHome} quest={questToComplete}></QuestCompleted>
+            case 'Party':
+                return <Party fetchPartyUsers={fetchPartyUsers} returnHome={returnHome} user={user} partyUsers={partyUsers}></Party>
             default: 
                 return null;
         }
