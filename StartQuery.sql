@@ -106,8 +106,8 @@ CREATE POLICY "Individuals can update quests" ON Quest FOR UPDATE
 CREATE POLICY "Individuals can Get Quests" on Quest FOR SELECT
 	using (auth.uid() = CreatedByUserId);
 
-CREATE POLICY "Individuals can link quests" on UserQuest FOR ALL
-	WITH CHECK (auth.uid() = user_id);
+--CREATE POLICY "Individuals can link quests" on UserQuest FOR ALL
+--	WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Individuals can create/Update Rewards" on Reward FOR ALL
 	WITH CHECK (auth.uid() = user_id);
@@ -134,17 +134,32 @@ create policy "everyone can view user details" on userdetail FOR
     select using (true);
 	
 --- STORED PROCEDURES TO MAKE CODING EASIER AND MORE LOGICAL
-CREATE OR REPLACE FUNCTION AddNewQuest(questName text, questDescription text, reward text, questSize text)
+CREATE OR REPLACE FUNCTION AddNewQuest(questName text, questDescription text, reward text, questSize text, newQuestUserId uuid)
 RETURNS integer
 AS $Body$
   DECLARE newQuestId integer;
   DECLARE userId uuid;
+  DECLARE questcheck integer;
 begin
   userId = auth.uid();
-  INSERT INTO quest(questname, questdescription, queststatus, reward, size,createddate, createdbyuserid) 
-    VALUES (questName, questDescription, 1, reward, cast(questSize as integer), current_date, userId) RETURNING questid INTO newQuestId;
-  INSERT INTO userquest (user_id, questid) VALUES (userId, NewQuestId);
-  return NewQuestId;
+  IF (newQuestUserId != userId) THEN
+    --If attempting to create a quest for another user, check to make sure the creating user has the rights.
+    SELECT count(userpartyid) INTO questcheck FROM userparty WHERE user_id = userid AND partyid IN (SELECT partyid FROM userparty WHERE user_id = newQuestUserId);
+    IF (questcheck = 0) THEN
+      RETURN 0;
+    ELSE 
+      INSERT INTO quest(questname, questdescription, queststatus, reward, size,createddate, createdbyuserid) 
+        VALUES (questName, questDescription, 1, reward, cast(questSize as integer), current_date, userId) RETURNING questid INTO newQuestId;
+      INSERT INTO userquest (user_id, questid) VALUES (newQuestUserId, NewQuestId);
+      RETURN newQuestId;
+    END IF;
+  ELSE 
+    INSERT INTO quest(questname, questdescription, queststatus, reward, size,createddate, createdbyuserid) 
+      VALUES (questName, questDescription, 1, reward, cast(questSize as integer), current_date, userId) RETURNING questid INTO newQuestId;
+    INSERT INTO userquest (user_id, questid) VALUES (newQuestUserId, NewQuestId);
+    return NewQuestId;
+  END IF;
+
 end;
 $Body$
 LANGUAGE plpgsql VOLATILE;
@@ -279,6 +294,8 @@ LANGUAGE plpgsql VOLATILE;
 --Permissions for functions/stored proceedures to access the auth
 
 GRANT EXECUTE ON FUNCTION GetQuests() TO PUBLIC;
+GRANT EXECUTE ON FUNCTION addnewquest(questName text, questDescription text, reward text, questSize text, newquestuserid uuid) TO PUBLIC;
+
 GRANT EXECUTE ON FUNCTION completequest(completedquestid bigint) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION createnewparty(partyname text) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION addpartymember(insertpartyid int, newmembertext text) TO PUBLIC;

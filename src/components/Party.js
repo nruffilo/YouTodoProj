@@ -1,5 +1,5 @@
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect} from "react";
 import { supabase } from "../lib/api";
 import PartyInfo from "./PartyInfo";
 
@@ -9,10 +9,6 @@ const Party = ({user, returnHome, quests, setQuests, partyUsers, fetchPartyUsers
 
     const [errorText, setError] = useState("");
     const [partyUsersMap, setPartyUsersMap] = useState([]);
-
-    useEffect(() => {
-        sortPartyUsersMap();            
-    }, []);
 
     const sortPartyUsersMap = () => {
         let partyUsersMapClean = [];
@@ -28,6 +24,12 @@ const Party = ({user, returnHome, quests, setQuests, partyUsers, fetchPartyUsers
         setPartyUsersMap(partyUsersMapClean);
     };
 
+
+    useEffect(() => {
+        sortPartyUsersMap();            
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+
     //const [quests, setQuests] = useState([]);
     const addPartyUser = async (partyId, userText) => {
         console.log("About to add ");
@@ -36,6 +38,7 @@ const Party = ({user, returnHome, quests, setQuests, partyUsers, fetchPartyUsers
         let { data: newPartyUserId, error } = await supabase
             .rpc("addpartymember", {insertpartyid: partyId, newmembertext: userText});
         if (error) {
+            console.log(newPartyUserId);
             console.log("error", error);
             setError(error);
         } else {
@@ -48,6 +51,7 @@ const Party = ({user, returnHome, quests, setQuests, partyUsers, fetchPartyUsers
         let {data: newPartyId, error } = await supabase.rpc("createnewparty",{partyname: newPartyTextRef.current.value});
         if (error) {
             console.log("error",error);
+            console.log(newPartyId);
             setError(error);
         } else {
             fetchPartyUsers();
@@ -114,6 +118,7 @@ const Party = ({user, returnHome, quests, setQuests, partyUsers, fetchPartyUsers
                         Home
                     </button>
                 </div>
+                <div>{errorText}</div>
 
     </div>)
 

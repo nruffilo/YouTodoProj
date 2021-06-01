@@ -19,6 +19,7 @@ const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
         let questDesc = newQuestDescriptionRef.current.value;
         let questSize = Number(parseInt(newQuestSizeRef.current.value));
         let questReward = newQuestRewardRef.current.value;
+        let questUserId = newQuestUserRef.current.value;
         let quest = questText.trim();
         if (quest.length <= 1) {
             setError("Quest needs at least 1 character");
@@ -28,7 +29,8 @@ const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
                     questdescription: questDesc, 
                     questsize: questSize, 
                     reward: questReward, 
-                    questname: questText
+                    questname: questText,
+                    newquestuserid: questUserId
                 }).single();
             if (error) setError(error.message);
             else {
@@ -71,7 +73,7 @@ const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
                                         <option value={user.id}>Yourself</option>
                                         {
                                             partyUsers.map((partyUser) => {
-                                                if (user.id != partyUser.partyuserid) {
+                                                if (user.id !== partyUser.partyuserid) {
                                                     return <option value={partyUser.partyuserid}>{partyUser.displayname}</option>
                                                 }
                                                 return '';

@@ -1,8 +1,6 @@
 const Hero = ({ user, heroInfo, showCharacterSheet, setError}) => {
     
     const displayAvatar = () => {
-        console.log("Avatar URL");
-        console.log(heroInfo.avatarurl);
         if (typeof(heroInfo.avatarurl) !== undefined && heroInfo.avatarurl !== '') {
             return <img alt='Character Hero Avatar' className='smallHeroImage' src={heroInfo.avatarurl}/>;
         } else {

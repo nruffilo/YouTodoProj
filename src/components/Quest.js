@@ -17,8 +17,8 @@ const Quest = ({ quest, onDelete, onComplete }) => {
     }
 
     return (
-            <div
-                    className={"p-3 max-h-14 flex align-center justify-between border"}
+            <div key={quest.questid}
+                    className={"p-3 max-h-14 flex align-center justify-between border questList"}
                 >
                     <span className={"truncate flex-grow"}>
                         <input

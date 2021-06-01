@@ -1,8 +1,7 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 
 const PartyInfo = ({partyInfo,addPartyUser, partyUsersMap, returnHome})  => {
     const newPartyUserTextRef = useRef();
-    const [errorText, setError] = useState("");
 
     const addPartyUserForThisParty = () => {
         addPartyUser(partyInfo.PartyId, newPartyUserTextRef.current.value);

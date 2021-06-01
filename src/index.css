@@ -2,6 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=MedievalSharp&display=swap');
+
 body {
   margin: 0;
   padding: 0;
@@ -17,6 +19,23 @@ body {
   width: 100%;
   height: 360px;
   max-width: 720px;
+}
+
+.confirmQuestCompletion {
+  font-family: 'MedievalSharp', cursive;
+  padding: 16px;
+}
+
+.confirmQuestCompletion h2 {
+  font-size: 2em;
+}
+
+.confirmQuestDescription {
+  font-size: 1.4em;
+}
+
+.spaceAtTheBottom {
+  margin-bottom: 64px;
 }
 
 .addNewQuest h2 {
@@ -52,11 +71,52 @@ body {
 }
 
 .smallHeroImage {
+  height: 48px;
+  display: inline-block;
+  margin-right: 14px;
+}
+
+.heroSmallDisplayName {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 32px;
+  padding-left: 12px;
+  padding-right: 12px;
+  padding-top: 6px;
+  display: inline-block;
+}
+
+.heroSmallExperience {
+  font-family: 'MedievalSharp', cursive;
+  font-size: 28px;
+}
+
+.heroSmallEditDetails {
+  display: inline-block;
   height: 32px;
+  width: 32px;
+  margin-left: 16px;
+  margin-right: 16px;
+  font-size: 24px;
 }
 
 .completeQuestButton {
   
+}
+
+.giveMeSomeSpace {
+margin-right: 12px;
+}
+
+
+.questList span {
+  margin-left: 6px;
+  border: 1px solid #999999;
+  border-radius: 3px;
+  background-color: #CCCCCC;
+  padding-left: 6px;
+  padding-right: 6px;
+  padding-top: 2px;
+  padding-bottom: 2px;
 }
 
 .cancelCompleteQuestButton {
