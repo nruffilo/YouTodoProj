@@ -90,6 +90,7 @@ const Party = ({user, returnHome, quests, setQuests, partyUsers, fetchPartyUsers
                 {partyUsersMap.length ? (
                             partyUsersMap.map((partyInfo) => (
                                 <PartyInfo 
+                                    key={partyInfo.PartyId}
                                     partyInfo={partyInfo}
                                     addPartyUser={addPartyUser}
                                     partyUsersMap={partyUsersMap}

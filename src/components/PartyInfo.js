@@ -7,13 +7,13 @@ const PartyInfo = ({partyInfo,addPartyUser, partyUsersMap, returnHome})  => {
         addPartyUser(partyInfo.PartyId, newPartyUserTextRef.current.value);
     }
 
-    return (<div className={"PartyInfo"}>
+    return (<div className={"PartyInfo"} key={partyInfo.PartyId}>
                 <h3>{partyInfo.PartyName}</h3>
-                <div className={"CreateParty"}>
+                <div className={"CreateParty"} key={partyInfo.PartyId}>
                     {
                         partyInfo.PartyUsers.length > 0 ? (
                             partyInfo.PartyUsers.map((partyUser) => (
-                                <div className={"PartyUser"}>{partyUser.displayname}</div>
+                                <div key={partyUser.partyuserid} className={"PartyUser"}>{partyUser.displayname}</div>
                             ))
                         ) : (
                             <span>No members of this party</span>

@@ -70,11 +70,11 @@ const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
                                     className={"bg-gray-200 border px-2 border-gray-300 w-full mr-4"}
                                     defaultValue={user.id}
                                     >
-                                        <option value={user.id}>Yourself</option>
+                                        <option key={user.id} value={user.id}>Yourself</option>
                                         {
                                             partyUsers.map((partyUser) => {
                                                 if (user.id !== partyUser.partyuserid) {
-                                                    return <option value={partyUser.partyuserid}>{partyUser.displayname}</option>
+                                                    return <option key={partyUser.partyuserid} value={partyUser.partyuserid}>{partyUser.displayname}</option>
                                                 }
                                                 return '';
                                             }
