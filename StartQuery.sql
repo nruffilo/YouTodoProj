@@ -106,8 +106,8 @@ CREATE POLICY "Individuals can update quests" ON Quest FOR UPDATE
 CREATE POLICY "Individuals can Get Quests" on Quest FOR SELECT
 	using (auth.uid() = CreatedByUserId);
 
-CREATE POLICY "Individuals can link quests" on UserQuest FOR ALL
-	WITH CHECK (auth.uid() = user_id);
+--CREATE POLICY "Individuals can link quests" on UserQuest FOR ALL
+--	WITH CHECK (auth.uid() = user_id);
 
 CREATE POLICY "Individuals can create/Update Rewards" on Reward FOR ALL
 	WITH CHECK (auth.uid() = user_id);
