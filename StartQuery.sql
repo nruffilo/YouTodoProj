@@ -73,17 +73,17 @@ CREATE TABLE UserDetail (
 
 --- function for getting and creating hero information if it doesn't exist...
 CREATE OR REPLACE FUNCTION GetHero()
-RETURNS table(avatarurl varchar, displayname varchar, experiencepoints int4)
+RETURNS table(avatarurl varchar, displayname varchar, experiencepoints int4, myuserid uuid)
 AS $Body$
   DECLARE userId uuid;
 begin
   userId = auth.uid();
-  IF NOT EXISTS (SELECT user_id FROM userdetail WHERE user_id = userId) THEN
+  IF NOT EXISTS (SELECT user_id FROM userdetail ud WHERE ud.user_id = userId) THEN
     INSERT INTO userdetail
       (user_id, avatarurl, displayname, experiencepoints) VALUES (userId, '','New Hero',0);
   END IF;
   return 
-    QUERY SELECT ud.avatarurl, ud.displayname, ud.experiencepoints FROM userdetail ud WHERE user_id = userId;
+    QUERY SELECT ud.avatarurl, ud.displayname, ud.experiencepoints, ud.user_id FROM userdetail ud WHERE ud.user_id = userId;
 END
 $Body$
 LANGUAGE plpgsql VOLATILE;
@@ -111,6 +111,9 @@ CREATE POLICY "Individuals can Get Quests" on Quest FOR SELECT
 
 CREATE POLICY "Individuals can create/Update Rewards" on Reward FOR ALL
 	WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Individuals can see their rewards" ON Reward FOR SELECT
+  USING (auth.uid() = user_id);
 
 CREATE POLICY "Individuals can Get Rewards" on Reward FOR SELECT
 	using (auth.uid() = user_id);

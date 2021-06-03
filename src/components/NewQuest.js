@@ -19,7 +19,12 @@ const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
         let questDesc = newQuestDescriptionRef.current.value;
         let questSize = Number(parseInt(newQuestSizeRef.current.value));
         let questReward = newQuestRewardRef.current.value;
-        let questUserId = newQuestUserRef.current.value;
+        let questUserId = "";
+        if (newQuestUserRef.current !== undefined) {
+            questUserId = newQuestUserRef.current.value;
+        } else {
+            questUserId = user.id;
+        }
         let quest = questText.trim();
         if (quest.length <= 1) {
             setError("Quest needs at least 1 character");
@@ -31,7 +36,7 @@ const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
                     reward: questReward, 
                     questname: questText,
                     newquestuserid: questUserId
-                }).single();
+                });
             if (error) setError(error.message);
             else {
                 let newQuest = {
