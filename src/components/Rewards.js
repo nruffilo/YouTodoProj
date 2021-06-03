@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect} from "react";
+import { useState } from "react";
 import { supabase } from "../lib/api";
 
 const Rewards = ({ rewards, returnHome, loadRewards }) => {
@@ -10,6 +10,7 @@ const Rewards = ({ rewards, returnHome, loadRewards }) => {
             .from("reward").update({redemptionstatus: 1, redemptiondate: new Date()}).match({rewardid: rewardId});
         if (error) {
             console.log("error", error);
+            console.log(updated);
             setError(error);
         }
         else loadRewards();
