@@ -21,6 +21,25 @@ body {
   max-width: 720px;
 }
 
+.IndividualReward input {
+  height: 24px;
+  width: 24px;
+  margin-right: 16px;
+  margin-bottom: 12px;
+  margin-top: 12px;
+}
+
+.RewardsList>div:nth-child(odd) {
+  background-color: #AAAAFF;
+}
+
+.templateFull {
+  background-color: #FFFFFF;
+  width: 100%;
+  height: 100%;
+  max-width: 720px;
+}
+
 .confirmQuestCompletion {
   font-family: 'MedievalSharp', cursive;
   padding: 16px;
