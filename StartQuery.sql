@@ -112,8 +112,12 @@ CREATE POLICY "Individuals can Get Quests" on Quest FOR SELECT
 --CREATE POLICY "Individuals can link quests" on UserQuest FOR ALL
 --	WITH CHECK (auth.uid() = user_id);
 
-CREATE POLICY "Individuals can create/Update Rewards" on Reward FOR ALL
+CREATE POLICY "Individuals can create/Update Rewards" on Reward FOR INSERT
 	WITH CHECK (auth.uid() = user_id);
+
+CREATE POLICY "Individuals can create/Update Rewards" on Reward FOR UPDATE
+	WITH CHECK (auth.uid() = user_id);
+
 
 CREATE POLICY "Individuals can see their rewards" ON Reward FOR SELECT
   USING (auth.uid() = user_id);
@@ -252,7 +256,7 @@ $Body$
 LANGUAGE plpgsql VOLATILE;
  
 	
---- GET QUESTS
+--- GET QUESTSc
 CREATE OR REPLACE FUNCTION GetQuests()
 RETURNS TABLE (questId int8, questname varchar, questdescription varchar, questatus int4, reward text, size int4, createddate timestamptz, completeddate timestamptz, expiredate timestamptz)
 AS $Body$

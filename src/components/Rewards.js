@@ -17,7 +17,7 @@ const Rewards = ({ rewards, returnHome, loadRewards }) => {
             console.log("error", error);
             console.log(data);
             //console.log(updated);
-            //setError(error);
+            setError("There was an error updating");
         }
         else loadRewards();
     };
