@@ -173,9 +173,9 @@ const Home = ({ user }) => {
                     
                 >
                     <div
-                        className={`p-2 border flex-grow grid gap-2 ${
+                        className={`p-2 border grid gap-2 ${
                             todos.length ? "auto-rows-min" : ""
-                        } grid-cols-1 h-2/3 overflow-y-scroll first:mt-8`}
+                        } grid-cols-1 h-2/3 overflow-y-scroll first:mt-8 noFlexGrow`}
                     >
                         {quests.length ? (
                             quests.map((quest) => (
