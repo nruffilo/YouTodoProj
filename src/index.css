@@ -118,6 +118,19 @@ body {
   font-size: 24px;
 }
 
+@media only screen and (max-width: 600px) {
+  .smallHeroImage {
+    height: 32px;    
+  }
+  .heroSmallDisplayName {
+    font-size: 18px;
+  }
+  .heroSmallExperience {
+    font-size: 16px;
+  }
+}
+
+
 .completeQuestButton {
   
 }
@@ -126,8 +139,12 @@ body {
 margin-right: 12px;
 }
 
+.listContainer {
+  height: 80vh;
+}
 
-.questList span {
+.questList div {
+  display: inline-block;
   margin-left: 6px;
   border: 1px solid #999999;
   border-radius: 3px;

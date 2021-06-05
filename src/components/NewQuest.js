@@ -44,11 +44,12 @@ const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
                     questname: newQuestTextRef.current.value,
                     questdescription: newQuestDescriptionRef.current.value,
                     queststatus: 1,
-                    questsize: newQuestSizeRef.current.value,
+                    size: parseInt(newQuestSizeRef.current.value),
                     createddate: new Date(),
                     completeddate: null,
                     expiredate: null
                 };
+                console.log(newQuest);
                 setQuests([newQuest, ...quests]);
                 setError(null);
                 newQuestTextRef.current.value = "";

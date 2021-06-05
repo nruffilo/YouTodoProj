@@ -85,6 +85,8 @@ const Home = ({ user }) => {
             setError(error);
         }
         else setQuests(quests);
+        console.log(quests);
+
     }
 
     const returnHome = () => {
@@ -151,7 +153,7 @@ const Home = ({ user }) => {
                 >
                     <span
                         className={
-                            "text-2xl sm:text-4xl text-white border-b font-sans"
+                            "text-2xl sm:text-4xl invisible md:visible text-white border-b font-sans"
                         }
                     >
                         You Todo
@@ -167,7 +169,7 @@ const Home = ({ user }) => {
                     </button>
                 </header>
                 <div
-                    className={"flex flex-col flex-grow p-4"}
+                    className={"flex flex-col flex-grow p-4 listContainer"}
                     
                 >
                     <div
