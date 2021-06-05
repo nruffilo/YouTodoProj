@@ -6,12 +6,18 @@ const Rewards = ({ rewards, returnHome, loadRewards }) => {
     const [errorText, setError] = useState("");
 
     const completeReward = async (rewardId) => {
-        let { data: updated, error } = await supabase
-            .from("reward").update({redemptionstatus: 1, redemptiondate: new Date()}).match({rewardid: rewardId});
+        const { data, error } = await supabase
+            .from('reward')
+            .update({ redemptionstatus: 1 })
+            .eq('rewardid', rewardId);
+
+//        let { data, error } = await supabase
+//            .from("reward").update({redemptionstatus: 1, redemptiondate: new Date()}).eq('rewardid',rewardId);
         if (error) {
             console.log("error", error);
-            console.log(updated);
-            setError(error);
+            console.log(data);
+            //console.log(updated);
+            //setError(error);
         }
         else loadRewards();
     };

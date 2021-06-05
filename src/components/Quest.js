@@ -18,36 +18,36 @@ const Quest = ({ quest, onDelete, onComplete }) => {
 
     return (
             <div key={quest.questid}
-                    className={"p-3 max-h-14 flex align-center justify-between border questList"}
+                    className={"p-3 flex align-center justify-between border questList"}
                 >
-                    <span className={"truncate flex-grow"}>
+                    <div className={""}>
                         <input
                             className="cursor-pointer mr-2"
                             onChange={onComplete}
                             
                             type="checkbox"
                         />
-                        <span
-                            className={`w-full flex-grow questSize `}
+                        <div
+                            className={`questSize `}
                         >
                             {questSize(quest.size)}
-                        </span>  
-                        <span
-                            className={`w-full flex-grow questName `}
+                        </div>  
+                        <div
+                            className={`questName `}
                         >
                             {quest.questname}
-                        </span>
-                        <span
-                            className={`w-full flex-grow questDescription `}
+                        </div>
+                        <div
+                            className={`questDescription `}
                         >
                             {quest.questdescription}
-                        </span>
-                        <span
-                            className={`w-full flex-grow questReward`}
+                        </div>
+                        <div
+                            className={`questReward`}
                         >
-                            {quest.reward}
-                        </span>    
-                    </span>
+                            {quest.reward }
+                        </div>    
+                    </div>
                     <button
                         className={"font-mono text-red-500 text-xl border px-2"}
                         onClick={(e) => {

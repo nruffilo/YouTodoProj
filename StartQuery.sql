@@ -68,7 +68,10 @@ CREATE TABLE UserDetail (
   user_id uuid references auth.users not null,
   AvatarUrl varchar default null,
   DisplayName varchar default null,
-  ExperiencePoints int default 0
+  ExperiencePoints int default 0,
+  level int default 0,
+  Gold int default 0,
+  AbilityPoints int default 0
 );
 
 --- function for getting and creating hero information if it doesn't exist...
@@ -293,6 +296,9 @@ begin
 END;
 $Body$
 LANGUAGE plpgsql VOLATILE;
+
+--Level up handling
+CREATE OR REPLACE FUNCTION checklevel(userId, )
 
 --Permissions for functions/stored proceedures to access the auth
 
