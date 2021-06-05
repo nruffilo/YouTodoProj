@@ -44,6 +44,24 @@ body {
   max-width: 720px;
 }
 
+.QuestCompletedScreen {
+  font-family: 'MedievalSharp', cursive;
+  color: #cccccc;
+}
+
+.QuestCompletedScreen h2 {
+  text-align: center;
+  margin-top: 128px;
+  font-size: 42px;
+  font-weight: bold;
+}
+
+.QuestCompletedScreen p {
+  text-align: center;
+  margin-top: 32px;
+  font-size: 32px;
+}
+
 .confirmQuestCompletion {
   font-family: 'MedievalSharp', cursive;
   padding: 16px;

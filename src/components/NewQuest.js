@@ -44,6 +44,7 @@ const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
                     questname: newQuestTextRef.current.value,
                     questdescription: newQuestDescriptionRef.current.value,
                     queststatus: 1,
+                    reward: newQuestRewardRef.current.value,
                     size: parseInt(newQuestSizeRef.current.value),
                     createddate: new Date(),
                     completeddate: null,
