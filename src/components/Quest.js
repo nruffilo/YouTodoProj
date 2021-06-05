@@ -20,7 +20,7 @@ const Quest = ({ quest, onDelete, onComplete }) => {
             <div key={quest.questid}
                     className={"p-3 flex align-center justify-between border questList"}
                 >
-                    <div className={""}>
+                    <div className={"flex-grow"}>
                         <input
                             className="cursor-pointer mr-2"
                             onChange={onComplete}
