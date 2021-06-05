@@ -9,6 +9,7 @@ import Rewards from "./Rewards";
 import CompleteQuest from "./CompleteQuest";
 import QuestCompleted from "./QuestCompleted";
 import Party from "./Party";
+import LevelUp from "./LevelUp";
 
 const Home = ({ user }) => {
     const [recoveryToken, setRecoveryToken] = useState(null);
@@ -20,6 +21,7 @@ const Home = ({ user }) => {
     const [heroInfo, setHeroInfo] = useState({});
     const [questToComplete, setQuestToComplete] = useState({});
     const [partyUsers, setPartyUsers] = useState([]);
+    const [levelUpInfo, setLevelUpInfo] = useState([]);
 
     
     useEffect(() => {
@@ -40,11 +42,30 @@ const Home = ({ user }) => {
             setRecoveryToken(result.access_token);
         }
 
+        checkLevelUp().catch(console.error);
         fetchQuests().catch(console.error);
         fetchHero().catch(console.error);
         fetchPartyUsers().catch(console.error);
         loadRewards().catch(console.error);
     }, []);
+
+    const checkLevelUp = async () => {
+        let { data: levelUpInfo, error } = await supabase
+            .rpc("checklevelup");
+        if (error) {
+            console.log("error", error);
+            setError(error);
+        }
+        else {
+            if (levelUpInfo.leveledup === 1) {
+                //the user has leveled up - lets CELEBRATE!
+                setLevelUpInfo(levelUpInfo);
+                setCurrentAction("LeveledUp");
+            }
+            console.log(levelUpInfo);
+        }
+
+    }
 
     const fetchHero = async () => {
         let { data: hero, error } = await supabase
@@ -241,6 +262,8 @@ const Home = ({ user }) => {
                 return <Party fetchPartyUsers={fetchPartyUsers} returnHome={returnHome} user={user} partyUsers={partyUsers}></Party>
             case 'Rewards':
                 return <Rewards returnHome={returnHome} rewards={rewards} loadRewards={loadRewards}></Rewards>
+            case 'LeveledUp':
+                return <LevelUp returnHome={returnHome} levelUpInfo={levelUpInfo}></LevelUp>
             default: 
                 return null;
         }

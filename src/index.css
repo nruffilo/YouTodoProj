@@ -152,6 +152,20 @@ body {
   }
 }
 
+.heroXPDisplay {
+  display: inline-block;
+  width: 52px;
+  font-size: 12px;
+  margin-left: 8px;
+}
+.heroCurrentXP, .heroNextLevelXP {
+  width: 100%;
+  text-align: center;
+}
+
+.heroCurrentXP {
+  border-bottom: 1px solid #000000;
+}
 
 .completeQuestButton {
   
