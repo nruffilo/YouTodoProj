@@ -44,6 +44,24 @@ body {
   max-width: 720px;
 }
 
+.QuestCompletedScreen {
+  font-family: 'MedievalSharp', cursive;
+  color: #cccccc;
+}
+
+.QuestCompletedScreen h2 {
+  text-align: center;
+  margin-top: 128px;
+  font-size: 42px;
+  font-weight: bold;
+}
+
+.QuestCompletedScreen p {
+  text-align: center;
+  margin-top: 32px;
+  font-size: 32px;
+}
+
 .confirmQuestCompletion {
   font-family: 'MedievalSharp', cursive;
   padding: 16px;
@@ -134,6 +152,20 @@ body {
   }
 }
 
+.heroXPDisplay {
+  display: inline-block;
+  width: 52px;
+  font-size: 12px;
+  margin-left: 8px;
+}
+.heroCurrentXP, .heroNextLevelXP {
+  width: 100%;
+  text-align: center;
+}
+
+.heroCurrentXP {
+  border-bottom: 1px solid #000000;
+}
 
 .completeQuestButton {
   

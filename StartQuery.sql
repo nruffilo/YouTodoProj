@@ -68,7 +68,7 @@ CREATE TABLE UserDetail (
   user_id uuid references auth.users not null,
   AvatarUrl varchar default null,
   DisplayName varchar default null,
-  ExperiencePoints int default 0,
+  ExperiencePoints int8 default 0,
   level int default 0,
   Gold int default 0,
   AbilityPoints int default 0
@@ -76,7 +76,7 @@ CREATE TABLE UserDetail (
 
 --- function for getting and creating hero information if it doesn't exist...
 CREATE OR REPLACE FUNCTION GetHero()
-RETURNS table(avatarurl varchar, displayname varchar, experiencepoints int4, myuserid uuid)
+RETURNS table(avatarurl varchar, displayname varchar, experiencepoints int4, myuserid uuid, "Level" int8, "Gold" int8, "AbilityPoints" int8)
 AS $Body$
   DECLARE userId uuid;
 begin
@@ -86,7 +86,7 @@ begin
       (user_id, avatarurl, displayname, experiencepoints) VALUES (userId, '','New Hero',0);
   END IF;
   return 
-    QUERY SELECT ud.avatarurl, ud.displayname, ud.experiencepoints, ud.user_id FROM userdetail ud WHERE ud.user_id = userId;
+    QUERY SELECT ud.avatarurl, ud.displayname, ud.experiencepoints, ud.user_id, ud."Level", ud."Gold", ud."AbilityPoints" FROM userdetail ud WHERE ud.user_id = userId;
 END
 $Body$
 LANGUAGE plpgsql VOLATILE;
@@ -234,6 +234,42 @@ end;
 $Body$
 LANGUAGE plpgsql VOLATILE;
 
+--level up
+CREATE OR REPLACE FUNCTION CheckLevelUp(
+  OUT leveledup int4,
+  OUT newlevel int4,
+  OUT abilityPointsReward int4,
+  OUT goldRewards int4
+)
+AS $Body$
+  DECLARE userId uuid;
+  DECLARE usersXP int4;
+  DECLARE currentLevel int4;
+  DECLARE xpToLevel int8;
+BEGIN
+  --To level up, you need current level +1 * 1000.  So, to reach level 1, you need 1000, then 2000, etc.\
+  userId = auth.uid();
+  leveledup = 0;
+  newlevel = 0;
+  abilityPointsReward = 0;
+  goldRewards = 0;
+  SELECT experiencepoints, "Level" INTO usersXP, currentLevel FROM userdetail WHERE user_id = userId;
+  xpToLevel = (currentLevel+1) * 1000;
+  IF (usersXP > xpToLevel) THEN
+    newLevel = currentLevel + 1;
+    leveledup = 1;
+    goldRewards = 100 + (25*newLevel);
+    abilityPointsReward = 1;
+    IF (MOD(newLevel, 10) = 0) THEN
+      goldRewards = goldRewards + 500;
+      abilityPointsReward = abilityPointsReward + 5;
+    END IF; 
+    UPDATE userdetail SET experiencepoints = experiencepoints - xpToLevel, "Level" = newLevel, "Gold" = "Gold" + goldRewards, "AbilityPoints" = "AbilityPoints" + abilityPointsReward WHERE user_id = userId;    
+  END IF;
+END;
+$Body$
+LANGUAGE plpgsql VOLATILE;
+
 --- Create quest for party member
 CREATE OR REPLACE FUNCTION CreateQuestForPartyMember(questName text, questDescription text, reward text, questSize text, targetUserId uuid)
 RETURNS integer
@@ -301,14 +337,12 @@ END;
 $Body$
 LANGUAGE plpgsql VOLATILE;
 
---Level up handling
-CREATE OR REPLACE FUNCTION checklevel(userId, )
 
 --Permissions for functions/stored proceedures to access the auth
 
 GRANT EXECUTE ON FUNCTION GetQuests() TO PUBLIC;
 GRANT EXECUTE ON FUNCTION addnewquest(questName text, questDescription text, reward text, questSize text, newquestuserid uuid) TO PUBLIC;
-
+GRANT EXECUTE ON FUNCTION checklevelup() to PUBLIC;
 GRANT EXECUTE ON FUNCTION completequest(completedquestid bigint) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION createnewparty(partyname text) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION addpartymember(insertpartyid int, newmembertext text) TO PUBLIC;

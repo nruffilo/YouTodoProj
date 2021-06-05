@@ -9,7 +9,12 @@ const Hero = ({ user, heroInfo, showCharacterSheet, setError}) => {
     }
 
     const displayExp = () => {
-        return heroInfo.experiencepoints + "/1000";
+        let nextLevelXp = (heroInfo.Level+1)*1000;
+        return (
+        <div className={"heroXPDisplay"}>
+            <div className={"heroCurrentXP"}>{heroInfo.experiencepoints}</div>
+            <div className={"heroNextLevelXP"}>{nextLevelXp}</div>
+        </div>)
     }
 
     return (
@@ -17,6 +22,9 @@ const Hero = ({ user, heroInfo, showCharacterSheet, setError}) => {
                 {displayAvatar()}
             <span className={"heroSmallDisplayName"}>
             {heroInfo.displayname}
+            </span>
+            <span className={"heroLevel"}>
+                Lvl: {heroInfo.Level}
             </span>
             <span className={"heroSmallExperience"}>
                 {displayExp()}
