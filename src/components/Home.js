@@ -13,7 +13,6 @@ import LevelUp from "./LevelUp";
 
 const Home = ({ user }) => {
     const [recoveryToken, setRecoveryToken] = useState(null);
-    const [todos, setTodos] = useState([]);
     const [quests, setQuests] = useState([]);
     const [rewards, setRewards] = useState([]);
     const [errorText, setError] = useState("");
@@ -146,8 +145,8 @@ const Home = ({ user }) => {
 
     const deleteQuest = async (id) => {
         try {
-            await supabase.from("quests").delete().eq("questid", id);
-            setTodos(quests.filter((x) => x.id !== id));
+            await supabase.rpc("deletequest", {deletedquestid: id});
+            setQuests(quests.filter((x) => x.questid !== id));
         } catch (error) {
             console.log("error", error);
         }
@@ -195,7 +194,7 @@ const Home = ({ user }) => {
                 >
                     <div
                         className={`p-2 border grid gap-2 ${
-                            todos.length ? "auto-rows-min" : ""
+                            quests.length ? "auto-rows-min" : ""
                         } grid-cols-1 h-2/3 overflow-y-scroll first:mt-8 noFlexGrow`}
                     >
                         {quests.length ? (
@@ -213,7 +212,7 @@ const Home = ({ user }) => {
                                     "h-full flex justify-center items-center"
                                 }
                             >
-                                You do have any tasks yet!
+                                You have no active quests!
                             </span>
                         )}
                     </div>
