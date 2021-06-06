@@ -179,16 +179,44 @@ margin-right: 12px;
   max-height: 80vh;
 }
 
+.questList {
+  background-image : url("./paperbg.png");
+  box-shadow: 4px 4px #555555;
+}
+
+
 .questList div {
   display: inline-block;
   margin-left: 6px;
-  border: 1px solid #999999;
-  border-radius: 3px;
-  background-color: #CCCCCC;
+/*  background-color: #CCCCCC;*/
   padding-left: 6px;
   padding-right: 6px;
   padding-top: 2px;
   padding-bottom: 2px;
+}
+
+.questName {
+  font-size: 1.2em;
+  font-family: 'MedievalSharp', cursive;
+  font-weight: bold;
+  width: 80%;
+}
+.questSize {
+  font-size: .8em;
+  font-family: 'MedievalSharp', cursive;
+  font-weight: 300;
+  display:  inline-block;
+  margin-left: 16px;
+}
+.questSize::before {
+  content: "[";
+}
+.questSize::after {
+  content: "]";
+}
+
+.questReward {
+  width: 100%;
 }
 
 .cancelCompleteQuestButton {

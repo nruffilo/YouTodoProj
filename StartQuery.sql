@@ -106,6 +106,10 @@ CREATE POLICY "Individuals can create Quests" on quest FOR INSERT
 CREATE POLICY "Individuals can update quests" ON Quest FOR UPDATE
   USING (auth.uid() = CreatedByUserId);
 
+CREATE POLICY "Individuals can delete quests" ON Quest FOR DELETE
+  USING (auth.uid() = CreatedByUserId);
+
+
 CREATE POLICY "Individuals can Get Quests" on Quest FOR SELECT
 	using (auth.uid() = CreatedByUserId);
 
@@ -337,9 +341,28 @@ END;
 $Body$
 LANGUAGE plpgsql VOLATILE;
 
+--delete quest
+CREATE OR REPLACE FUNCTION deletequest(deletedquestid int)
+RETURNS integer
+AS $Body$
+  DECLARE userId uuid;
+begin
+  userId = auth.uid();
+  --check to see if this is a party admin for the target user
+  IF EXISTS (SELECT questid FROM userquest WHERE questid = deletedquestid AND user_id = userId) THEN
+    DELETE FROM userquest WHERE questid = deletedquestid;
+    DELETE FROM quest WHERE questid = deletedquestid;
+    return 1;
+  ELSE 
+    return 0;
+  END IF;
+end;
+$Body$
+LANGUAGE plpgsql VOLATILE;
 
 --Permissions for functions/stored proceedures to access the auth
 
+GRANT EXECUTE ON FUNCTION deletequest(deletedquestid int) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION GetQuests() TO PUBLIC;
 GRANT EXECUTE ON FUNCTION addnewquest(questName text, questDescription text, reward text, questSize text, newquestuserid uuid) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION checklevelup() to PUBLIC;
