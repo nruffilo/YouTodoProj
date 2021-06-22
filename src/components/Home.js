@@ -258,7 +258,7 @@ const Home = ({ user }) => {
             case 'QuestCompleted':
                 return <QuestCompleted returnHome={returnHome} quest={questToComplete}></QuestCompleted>
             case 'Party':
-                return <Party fetchPartyUsers={fetchPartyUsers} returnHome={returnHome} user={user} partyUsers={partyUsers}></Party>
+                return <Party fetchPartyUsers={fetchPartyUsers} heroInfo={heroInfo} returnHome={returnHome} user={user} partyUsers={partyUsers}></Party>
             case 'Rewards':
                 return <Rewards returnHome={returnHome} rewards={rewards} loadRewards={loadRewards}></Rewards>
             case 'LeveledUp':

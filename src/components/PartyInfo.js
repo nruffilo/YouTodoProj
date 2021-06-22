@@ -9,7 +9,7 @@ const PartyInfo = ({partyInfo,addPartyUser, partyUsersMap, returnHome})  => {
 
     return (<div className={"PartyInfo"} key={partyInfo.PartyId}>
                 <h3>{partyInfo.PartyName}</h3>
-                <div className={"CreateParty"} key={partyInfo.PartyId}>
+                <div className={"partyMemberList"} key={partyInfo.PartyId}>
                     {
                         partyInfo.PartyUsers.length > 0 ? (
                             partyInfo.PartyUsers.map((partyUser) => (
@@ -26,20 +26,22 @@ const PartyInfo = ({partyInfo,addPartyUser, partyUsersMap, returnHome})  => {
                                 type="text"
                                 placeholder="MemberName#1234"
                                 className={
-                                    "bg-gray-200 border px-2 border-gray-300 w-full mr-4"
+                                    "floatLeft bg-gray-200 border px-2 border-gray-300 w-1/2 mr-4"
                                 }
                             />
                         </label>
-                    </div>
-                    <button
+                        <button
                             onClick={addPartyUserForThisParty}
                             className={
-                                "floatLeft justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
+                                "floatRight w-1/4 justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
                             }
                         >
                             Add to Party
                         </button>
+
+                    </div>
                 </div>
+                <div className={"clearFix"}></div>
 
     </div>)
 
