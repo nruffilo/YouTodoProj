@@ -10,6 +10,7 @@ import CompleteQuest from "./CompleteQuest";
 import QuestCompleted from "./QuestCompleted";
 import Party from "./Party";
 import LevelUp from "./LevelUp";
+import AdventureHome from "./Adventure/AdventureHome";
 
 const Home = ({ user }) => {
     const [recoveryToken, setRecoveryToken] = useState(null);
@@ -138,6 +139,10 @@ const Home = ({ user }) => {
         setCurrentAction("NewQuest");
     }
 
+    const loadAdventureScreen = () => {
+        setCurrentAction("Adventure");
+    }
+
     const confirmCompleteQuest = (quest) => {
         setQuestToComplete(quest);
         setCurrentAction("CompleteQuest");
@@ -247,6 +252,12 @@ const Home = ({ user }) => {
                             "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out giveMeSomeSpace"
                         }
                         >Rewards</button>
+                    <button
+                        onClick={loadAdventureScreen}
+                        className={
+                            "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out giveMeSomeSpace"
+                        }
+                        >Adventure</button>
                 </div>
             </div>
             case 'NewQuest':
@@ -263,6 +274,8 @@ const Home = ({ user }) => {
                 return <Rewards returnHome={returnHome} rewards={rewards} loadRewards={loadRewards}></Rewards>
             case 'LeveledUp':
                 return <LevelUp returnHome={returnHome} levelUpInfo={levelUpInfo}></LevelUp>
+            case 'Adventure':
+                return <AdventureHome returnHome={returnHome} heroInfo={heroInfo} user={user}></AdventureHome>
             default: 
                 return null;
         }
