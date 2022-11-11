@@ -9,8 +9,9 @@ import 'rpg-awesome/css/rpg-awesome.min.css';
 import { CommonAdventures } from './CommonAdventures';
 
 
-function AdventureHome() {
+function AdventureHome(props) {
   const userName = useRef(null);
+  /*
   const [user, setUser] = useState({
     characterName: "",
     currentHP: 25,
@@ -23,14 +24,22 @@ function AdventureHome() {
     items: [],
     mostRecentAdventure: {}
   });
+  */
 
   const [inAction, setInAction] = useState(false);
-  const [action, setAction] = useState("intro");
+  const [action, setAction] = useState("town");
   const [currentAdventure, setCurrentAdventure] = useState({});
   const [currentEnemy, setCurrentEnemy] = useState({});
 
+  const setUser = (newUser) => {
+    console.log("setting to ");
+    console.log(newUser);
+    props.setHeroInfo(newUser);
+  }
+
   const updateAndSetCurrentAdventure = (adventure) => {
     //see if the adventure has an encounter, if so, process it.
+    debugger;
     if (adventure.encounter !== undefined && adventure.encounter !== null) {
       let roll = Math.floor(Math.random() * 100);
       let activeEncounter = null;
@@ -41,11 +50,11 @@ function AdventureHome() {
       };
 
       //if we have an active encounter process it as a reward, or action
-      if (activeEncounter != null) {
-        if (activeEncounter.reward != undefined) {
+      if (activeEncounter !== null) {
+        if (activeEncounter.reward !== undefined) {
           adventure.reward.push(activeEncounter.reward);
           adventure.story += adventure.text;
-        } else if (activeEncounter.action != undefined) {
+        } else if (activeEncounter.action !== undefined) {
           let newAdventure = CommonAdventures[activeEncounter.action];
           newAdventure.returnAction = activeEncounter.returnAction;
         }
@@ -54,11 +63,12 @@ function AdventureHome() {
 
     //see if this has a reward attached, if so, give it and mark it as collected if not already.
     if (adventure.reward !== undefined && adventure.reward !== null) {
-      let tmpUser = {...user};
+      let tmpUser = {...props.heroInfo};
 
       adventure.reward.forEach(reward => {
           tmpUser[reward.stat] = tmpUser[reward.stat] + reward.value;
       });
+      tmpUser.updateStats = true;
       adventure.rewardDisplay = adventure.reward;
       setUser(tmpUser);
       //add the rewards to the story text.
@@ -93,7 +103,7 @@ function AdventureHome() {
       alert("You must provide a name");
       return false;
     }
-    let tmpUser = {...user};
+    let tmpUser = {...props.heroInfo};
     tmpUser.characterName = userName.current.value;
     setUser(tmpUser);
     setAction("town");
@@ -127,31 +137,31 @@ function AdventureHome() {
 
         { 
         action === "town" ? 
-          <Town user={user} setInAction={setInAction}></Town>
+          <Town user={props.heroInfo} setInAction={setInAction}></Town>
           : null
         }
 
         { 
         action === "user" ? 
-          <UserInfo user={user} setInAction={setInAction} setUser={setUser}></UserInfo>
+          <UserInfo user={props.heroInfo} setInAction={setInAction} setUser={setUser}></UserInfo>
         : null
         }
 
         { 
         action === "training" ? 
-          <Training user={user} setInAction={setInAction} setUser={setUser}></Training>
+          <Training user={props.heroInfo} setInAction={setInAction} setUser={setUser}></Training>
         : null
         }
 
         {
           action === "tavern" ?
-          <Tavern user={user} setInAction={setInAction} setUser={setUser}></Tavern>
+          <Tavern user={props.heroInfo} setInAction={setInAction} setUser={setUser}></Tavern>
           : null
         }
 
         {
         action === "adventure" ?
-          <Adventure user={user} setInAction={setInAction} setAction={setAction} currentEnemy={currentEnemy} setCurrentEnemy={setCurrentEnemy} setUser={setUser} currentAdventure={currentAdventure} setCurrentAdventure={updateAndSetCurrentAdventure}></Adventure>
+          <Adventure user={props.heroInfo} setInAction={setInAction} setAction={setAction} currentEnemy={currentEnemy} setCurrentEnemy={setCurrentEnemy} setUser={setUser} currentAdventure={currentAdventure} setCurrentAdventure={updateAndSetCurrentAdventure}></Adventure>
           : null
         }
 

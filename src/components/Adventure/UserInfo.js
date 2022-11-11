@@ -5,7 +5,7 @@ function UserInfo(props) {
         <>
         <div className="userDisplay">
             <h2>About You:</h2>
-            <p>Name: {props.user.characterName}</p>
+            <p>Name: {props.user.displayname}</p>
             <p>HP: {props.user.currentHP} / {props.user.maxHP}</p>
             <p>Strength: {props.user.strength}</p>
             <p>Magic: {props.user.magic}</p>

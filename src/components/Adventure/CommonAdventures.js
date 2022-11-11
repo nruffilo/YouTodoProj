@@ -1,5 +1,6 @@
 
 export const CommonAdventures = {
+    //1
     DwarvenMine: {
         type: "story",
         heading: "Dwarven Mine",
@@ -10,6 +11,7 @@ export const CommonAdventures = {
             {text: "Return Home", action: "ReturnHome"}
         ]
     },
+    //2
     ExploreTheMine: {
         type: "story",
         heading: "Mine Entrance",
@@ -20,6 +22,7 @@ export const CommonAdventures = {
             {text: "Explore!", action: "MinesGreatHall"}
         ]
     },
+    //3
     MinesGreatHall: {
         type: "story",
         heading: "The Great Hall",
@@ -37,6 +40,7 @@ export const CommonAdventures = {
     MinesRoom2: {
 
     },
+    //4
     MineShaft: {
         type: "story",
         heading: "The Mine Shaft",
@@ -51,6 +55,7 @@ export const CommonAdventures = {
             {text: "Explore Deeper", action: "MineShaft2"}
         ]
     },
+    //5
     SearchRubble: {
         type: "story",
         heading: "You search the rubble.",
@@ -58,6 +63,7 @@ export const CommonAdventures = {
         reward: [{stat: "gold",value:4}],
         actions: [{text: "Return Home",action:"ReturnHome"}]
     },
+    //6
     FairyGarden: {
         type: "story",
         heading: "Fairy Garden",
@@ -69,12 +75,14 @@ export const CommonAdventures = {
             {conditions: [{random:50}], text: "Catch a Fairy", action: "FairiesRandom"}
         ]
     },
+    //7
     FairiesRandom: {
         type: "story",
         heading: "Catch a Fairy",
         story: "You are bold and attempt to catch a fairy, but you are unsuccessful.",
         actions: [{text: "Return Home",action: "ReturnHome"}]
     },
+    //8
     LearnFromFairies: {
         type: "story",
         heading: "Learn from the Fairies",
@@ -82,6 +90,7 @@ export const CommonAdventures = {
         reward:[{stat:"satisfaction",value:1}, {stat: "magic", value:1}],
         actions:[{text: "Return Home",action: "ReturnHome"}]
     },
+    //9
     FairyGardenStayAndPlay: {
         type: "story",
         heading: "Stay and Play",
@@ -89,12 +98,14 @@ export const CommonAdventures = {
         reward: [{stat:"satisfaction",value:1}],
         actions: [{text: "Return Home",action: "ReturnHome"}]
     },
+    //10
     FairyGardenStayAndPlayBad: {
         type: "story",
         heading: "Chased away!",
         story: "The fairies are annoyed by your presence and flee quickly.",
         actions: [{text: "Return Home",action: "ReturnHome"}]
     },
+    //11
     PotOfGold: {
         type: "story",
         heading: "Pot of Gold",
@@ -104,6 +115,7 @@ export const CommonAdventures = {
             {text: "Take Some Gold",action:"PotOfGoldTakeGold"}
         ]
     },
+    //12
     PotOfGoldTakeGold: {
         type: "story",
         heading: "You take some gold",
@@ -111,6 +123,7 @@ export const CommonAdventures = {
         story: "You managed to take some gold and go unnoticed.",
         actions: [{text:"Return Home",action:"ReturnHome"}]
     },
+    //13
     Ogre: {
         type: "story",
         heading: "Ogre!",
@@ -120,6 +133,7 @@ export const CommonAdventures = {
             {text:"Fight!",action:"OgreFight"}
         ] 
     },
+    //14
     OgreFight: {
         type: "combat",
         enemyName: "Ogre",
@@ -128,6 +142,7 @@ export const CommonAdventures = {
         story: "An ogre is a tall, terrible smelling, and horribly strong creature.",
         actions: []
     },
+    //15
     CombatComplete: {
         type: "story",
         heading: "You won!",
@@ -135,6 +150,7 @@ export const CommonAdventures = {
         reward: [{}],
         actions: []
     },
+    //16
     Flee: {
         type: "story",
         heading: "Live to fight another day...",
@@ -142,6 +158,7 @@ export const CommonAdventures = {
         reward: [{}],
         action: [{text: "Return Home",action:"complete"}]
     },
+    //17
     ReturnHome: {
         type: "story",
         heading: "Return Home",

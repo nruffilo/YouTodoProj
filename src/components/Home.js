@@ -49,6 +49,23 @@ const Home = ({ user }) => {
         loadRewards().catch(console.error);
     }, []);
 
+    const updateHeroInfo = (hero) => {
+        if (hero.updateStats) {
+            updateStats(hero);
+            hero.updateStats = null;
+        }
+        setHeroInfo(hero);
+    }
+
+    const updateStats = async (userStats) => {
+        let { data , error } = await supabase
+            .rpc('updateherostats', {gold: userStats.gold, strength: userStats.strength, magic: userStats.magic });
+        if (error) setError(error.message + data);
+        else {
+            console.log("data saved");
+        }
+    }
+
     const checkLevelUp = async () => {
         let { data: levelUpInfo, error } = await supabase
             .rpc("checklevelup");
@@ -74,7 +91,10 @@ const Home = ({ user }) => {
             console.log("error", error);
             setError(error);
         }
-        else setHeroInfo(hero[0]);
+        else {
+            hero[0].items = [];
+            setHeroInfo(hero[0]);
+        }
     }
 
     const loadRewards = async () => {
@@ -263,7 +283,7 @@ const Home = ({ user }) => {
             case 'NewQuest':
                 return <NewQuest returnHome={returnHome} setQuests={setQuests} quests={quests} heroInfo={heroInfo} user={user} partyUsers={partyUsers}/>
             case 'CharacterSheet':
-                return <CharacterSheet user={user} heroInfo={heroInfo} returnHome={returnHome} setHeroInfo={setHeroInfo}/>
+                return <CharacterSheet user={user} heroInfo={heroInfo} returnHome={returnHome} setHeroInfo={updateHeroInfo}/>
             case 'CompleteQuest':
                 return <CompleteQuest user={user} quest={questToComplete} completeQuest={completeQuest} returnHome={returnHome}></CompleteQuest>
             case 'QuestCompleted':
@@ -275,7 +295,7 @@ const Home = ({ user }) => {
             case 'LeveledUp':
                 return <LevelUp returnHome={returnHome} levelUpInfo={levelUpInfo}></LevelUp>
             case 'Adventure':
-                return <AdventureHome returnHome={returnHome} heroInfo={heroInfo} user={user}></AdventureHome>
+                return <AdventureHome updateStats={updateStats} returnHome={returnHome} setHeroInfo={setHeroInfo} heroInfo={heroInfo} user={user}></AdventureHome>
             default: 
                 return null;
         }

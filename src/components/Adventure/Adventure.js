@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { CommonAdventures } from './CommonAdventures';
 import { AdventureList } from "./AdventureList";
+import { supabase } from '../../lib/api';
 
 function Adventure(props) {
     const [yourAttack, setYourAttack] = useState();
@@ -98,9 +99,30 @@ function Adventure(props) {
         props.setCurrentAdventure({});
     }
 
-    const goOnAdventure = () => {
-        let newAdvType = Math.floor(Math.random()*AdventureList.length);
-        props.setCurrentAdventure({...CommonAdventures[AdventureList[newAdvType]]});
+    const goOnAdventure = async () => {
+        let { data: nextAdventureResult, error } = await supabase
+            .from("adventure")
+            .select("*")
+            .eq("startindicator",true);
+        if (error) {
+            console.log("error",error);
+        } else {
+            //load the actions
+            let newAdvNum = Math.floor(Math.random()*nextAdventureResult.length);
+            let {data: actionResult, error } = await supabase
+                .from("adventureaction")
+                .select("*")
+                .eq("originatingadventureid",nextAdventureResult[newAdvNum].adventureid)
+            if (error) {
+                console.log("error",error);
+            } else {
+                actionResult.map((action) => {
+                    if (action.conditions !== null) action.conditions = JSON.parse(action.conditions);
+                });
+                nextAdventureResult[newAdvNum].actions = actionResult;
+                props.setCurrentAdventure(nextAdventureResult[newAdvNum]);
+            }
+        }    
     }
 
     const nextStepRandom = (randomAction) => {
@@ -114,16 +136,47 @@ function Adventure(props) {
         nextStep(nextAction);
     }
 
+    const loadAdventureById = async (adventureId) => {
+        let { data: nextAdventureResult, error } = await supabase
+            .from("adventure")
+            .select("*")
+            .eq("adventureid",adventureId)
+            .single();
+        if (error) {
+            console.log("error",error);
+        } else {
+            //load the actions
+            let {data: actionResult, error } = await supabase
+                .from("adventureaction")
+                .select("*")
+                .eq("originatingadventureid",nextAdventureResult.adventureid)
+            if (error) {
+                console.log("error",error);
+            } else {
+                actionResult.map((action) => {
+                    if (action.conditions !== null) action.conditions = JSON.parse(action.conditions);
+                });
+                nextAdventureResult.actions = actionResult;
+                //convert any json text to json
+                if (nextAdventureResult.reward !== null) {
+                    nextAdventureResult.reward = JSON.parse(nextAdventureResult.reward);
+                }
+                
+                props.setCurrentAdventure(nextAdventureResult);
+            }
+        }    
+    }
+
     const nextStep = (action) => {
-        if (action === "complete") {
+        if (action === 0) {
             completeAdventure();
         } else {
-            props.setCurrentAdventure(CommonAdventures[action]);
+            loadAdventureById(action);
         }
     }
 
     const renderEvent = (event) => {
-        switch (event.type) {
+        switch (event.adventuretype) {
             case "story":
                 return <>
                     <h2>{event.heading}</h2>
@@ -141,8 +194,9 @@ function Adventure(props) {
                         : null
                     }
                     { event.actions.map(action => {
+                        console.log(action);
                         let passedConditions = true;
-                        if (action.conditions != null) {                            
+                        if (action.conditions !== null) {
                             for (let idx in action.conditions) {
                                 let condition = action.conditions[idx];
                                 if (condition.random !== undefined) {
@@ -158,13 +212,13 @@ function Adventure(props) {
                         };
                         if (passedConditions)
                         {
-                            if (action.action !== undefined) {
+                            if (action.adventureid !== undefined) {
                                 return <>
-                                <button onClick={() => nextStep(action.action)}>{action.text}</button>
+                                <button onClick={() => nextStep(action.adventureid)}>{action.actiontext}</button>
                                 </>
                             } else if (action.randomAction !== undefined) {
                                 return <>
-                                <button onClick={() => nextStepRandom(action.randomAction)}>{action.text}</button>
+                                <button onClick={() => nextStepRandom(action.randomAction)}>{action.actiontext}</button>
                                 </>
                             }
                         }
@@ -205,7 +259,7 @@ function Adventure(props) {
     return (
         <div className="adventure">
             {
-                typeof(props.currentAdventure.type) === "undefined" ? 
+                typeof(props.currentAdventure.adventuretype) === "undefined" ? 
                 <>
                     <h2>Go on an Adventure</h2>
                     <p>Life is full of adventure.  By stepping foot out of town, you open yourself to any number of possible adventures.  Some wonderful, some scary, and some very dangerous.  You never know what you will experience, except that it will be an adventure.</p>
