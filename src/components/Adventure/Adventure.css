@@ -1,0 +1,117 @@
+@font-face  {
+  font-family: Quintessential;
+  src: url(../../fonts/Quintessential-Regular.ttf);
+}
+
+body {
+  font-family: Quintessential;
+}
+
+h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.App {
+  text-align: center;
+  height: 720px;
+  width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 64px;
+}
+
+.userDisplay {
+  font-size: 1.5em;
+  text-align: left;
+}
+
+.adventureStoryText {
+  font-size: 1.1em;
+  text-align: left;
+  margin-bottom: 6px;
+}
+
+.adventureImage {
+  width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 6px;
+}
+
+.mainWindow {
+  width: 400px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+input {
+  font-size: 16px;
+  padding: 12px;
+  font-family: Quintessential;
+}
+
+button {
+  margin: 4px;
+  width: 200px;
+  letter-spacing: 2px;
+  border-radius: 8px;
+  font-family: Quintessential;
+  color: #ffc000;
+  font-size: 18px;
+  font-weight: 600;
+  text-shadow: 0 1px 3px #000;
+  text-align: center;
+  padding: 10px 0;
+  background: radial-gradient(circle, #8b0000, #8b0000);
+  border-top: 4px ridge #ffb000;
+  border-left: 4px groove #ffb000;
+  border-right: 4px ridge #ffb000;
+  border-bottom: 4px groove #ffb000;
+  box-shadow: inset 0px 0px 5px 3px rgba(1,1,1,0.3);
+}
+
+button:hover {
+  background: radial-gradient(circle, #e52b2b, #8b0000);
+  box-shadow: 0px 0 5px 5px rgba(255,255,255,0.2)
+}
+
+button:active {
+  background: radial-gradient(circle, #ec6a6a, #e52b2b);
+  box-shadow: 0px 0 5px 5px rgba(255,255,255,0.2)
+}

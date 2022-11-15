@@ -9,7 +9,7 @@ const Hero = ({ user, heroInfo, showCharacterSheet, setError}) => {
     }
 
     const displayExp = () => {
-        let nextLevelXp = (heroInfo.Level+1)*1000;
+        let nextLevelXp = (heroInfo.level+1)*1000;
         return (
         <div className={"heroXPDisplay"}>
             <div className={"heroCurrentXP"}>{heroInfo.experiencepoints}</div>
@@ -24,14 +24,14 @@ const Hero = ({ user, heroInfo, showCharacterSheet, setError}) => {
             {heroInfo.displayname}
             </span>
             <span className={"heroLevel"}>
-                Lvl: {heroInfo.Level}
+                Lvl: {heroInfo.level}
             </span>
             <span className={"heroSmallExperience"}>
                 {displayExp()}
             </span>
             <button className={"heroSmallEditDetails"}
                 onClick={showCharacterSheet}>
-                ?
+                <i className="ra ra-player"></i>
             </button>
         </div>    
 
