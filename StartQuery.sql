@@ -104,7 +104,8 @@ CREATE TABLE Adventure (
   AdventureEnemyId bigint references AdventureEnemy null,
   Heading varchar default null,
   Story varchar default null,
-  Rewards varchar default null
+  Rewards varchar default null,
+  image varchar default null
 );
 
 CREATE TABLE AdventureAction (
@@ -390,13 +391,14 @@ begin
   --check to see if this is a party admin for the target user
   UPDATE userdetail 
     SET 
-    gold = gold,
-    currenthpt = currenthp,
-    maxhp = maxhp, 
-    defense = defense, 
-    strength = strength, 
-    magic = magic
+    "Gold" = gold,
+    "CurrentHP" = currenthp,
+    "MaxHP" = maxhp, 
+    "Defense" = defense, 
+    "Strength" = strength, 
+    "Magic" = magic
   WHERE user_id = userId;
+  RETURN 1;
 end;
 $Body$
 LANGUAGE plpgsql VOLATILE;
@@ -410,6 +412,7 @@ AS $Body$
   DECLARE QuestReward text;
   DECLARE QuestSize int;
   DECLARE xpValue int;
+  DECLARE goldValue int;
 begin
   userId = auth.uid();
   --Check to see if this quest ID is owned by this user
@@ -424,7 +427,14 @@ begin
       WHEN QuestSize = 4 THEN xpValue = 2500;
       ELSE xpValue = 0;
     END CASE;
-    UPDATE userdetail SET experiencepoints = experiencepoints + xpValue WHERE user_id = userId;
+    CASE 
+      WHEN QuestSize = 1 THEN goldValue = 5;
+      WHEN QuestSize = 2 THEN goldValue = 10;
+      WHEN QuestSize = 3 THEN goldValue = 25;
+      WHEN QuestSize = 4 THEN goldValue = 55;
+      ELSE xpValue = 0;
+    END CASE;
+    UPDATE userdetail SET experiencepoints = experiencepoints + xpValue, "Gold" = "Gold" + goldValue WHERE user_id = userId;
   END IF;
   return 1;
 END;
@@ -455,7 +465,7 @@ LANGUAGE plpgsql VOLATILE;
 
 GRANT EXECUTE ON FUNCTION deletequest(deletedquestid int) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION GetQuests() TO PUBLIC;
-GRANT EXECUTE ON FUNCTION updateherostats(gold bigint, currenthp bigint, maxhp bigint, defense bigint, strength bigint, magic bigint)
+GRANT EXECUTE ON FUNCTION updateherostats(gold bigint, currenthp bigint, maxhp bigint, defense bigint, strength bigint, magic bigint) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION GetAdventure(findAdventureId int4) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION addnewquest(questName text, questDescription text, reward text, questSize text, newquestuserid uuid) TO PUBLIC;
 GRANT EXECUTE ON FUNCTION checklevelup() to PUBLIC;

@@ -11,6 +11,7 @@ function Training(props) {
             let tmpUser = {...props.user};
             tmpUser.gold = tmpUser.gold - tmpUser.strength;
             tmpUser.strength = tmpUser.strength + 1;
+            tmpUser.updateStats = true;
             props.setUser(tmpUser);
         }
         if (type === "magic") {
@@ -21,6 +22,7 @@ function Training(props) {
             let tmpUser = {...props.user};
             tmpUser.gold = tmpUser.gold - tmpUser.magic;
             tmpUser.magic = tmpUser.magic + 1;
+            tmpUser.updateStats = true;
             props.setUser(tmpUser);
         }
 

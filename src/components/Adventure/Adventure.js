@@ -180,7 +180,12 @@ function Adventure(props) {
             case "story":
                 return <>
                     <h2>{event.heading}</h2>
-                    <p>{event.story}</p>
+                    {
+                        event.image !== null ?
+                            <div className="adventureImage"><img src={`/images/${event.image}`}/></div>
+                        : null
+                    }
+                    <p className="adventureStoryText">{event.story}</p>
                     {
                         event.rewardDisplay !== undefined ?
                         <b>Rewards:</b>

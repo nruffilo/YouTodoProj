@@ -50,14 +50,14 @@ const Quest = ({ quest, onDelete, onComplete }) => {
                         }
                     </div>
                     <button
-                        className={"font-mono text-red-500 text-xl border px-2"}
+                        className={"cancelButton"}
                         onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
                             onDelete();
                         }}
                     >
-                        X
+                        <i className="ra ra-cancel"></i>
                     </button>
                 </div>
     );

@@ -83,6 +83,10 @@ function AdventureHome(props) {
       setAction("user");
   }
 
+  const goToQuests = () => {
+    props.returnHome();
+  }
+
   const goOnAdventure = () => {
     if (!inAction)
       setAction("adventure");
@@ -118,6 +122,8 @@ function AdventureHome(props) {
           <br/>
           <button className="MenuButton" onClick={goTraining}><i className="ra ra-anvil"></i> Train</button>
           <button className="MenuButton" onClick={goToTavern}><i className="ra ra-bottle-vapors"></i> Tavern</button>
+          <br/>
+          <button className="MenuButton" onClick={goToQuests}><i className="ra ra-bridge"></i> Back</button>
         </header>
         : null
       }

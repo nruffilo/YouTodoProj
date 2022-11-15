@@ -7,16 +7,36 @@ body {
   font-family: Quintessential;
 }
 
+h2 {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
 .App {
   text-align: center;
-  background-image: url("./paper_transparent.png");
-  background-size: contain;
-  background-repeat: no-repeat;
   height: 720px;
   width: 640px;
   margin-left: auto;
   margin-right: auto;
   padding-top: 64px;
+}
+
+.userDisplay {
+  font-size: 1.5em;
+  text-align: left;
+}
+
+.adventureStoryText {
+  font-size: 1.1em;
+  text-align: left;
+  margin-bottom: 6px;
+}
+
+.adventureImage {
+  width: 320px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 6px;
 }
 
 .mainWindow {

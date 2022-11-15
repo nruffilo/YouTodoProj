@@ -11,6 +11,8 @@ import QuestCompleted from "./QuestCompleted";
 import Party from "./Party";
 import LevelUp from "./LevelUp";
 import AdventureHome from "./Adventure/AdventureHome";
+import 'rpg-awesome/css/rpg-awesome.min.css';
+
 
 const Home = ({ user }) => {
     const [recoveryToken, setRecoveryToken] = useState(null);
@@ -50,6 +52,7 @@ const Home = ({ user }) => {
     }, []);
 
     const updateHeroInfo = (hero) => {
+        console.log(hero);
         if (hero.updateStats) {
             updateStats(hero);
             hero.updateStats = null;
@@ -59,7 +62,13 @@ const Home = ({ user }) => {
 
     const updateStats = async (userStats) => {
         let { data , error } = await supabase
-            .rpc('updateherostats', {gold: userStats.gold, strength: userStats.strength, magic: userStats.magic });
+            .rpc('updateherostats', {
+                gold: userStats.gold, 
+                currenthp: userStats.currentHP,
+                maxhp: userStats.maxHP,
+                defense: userStats.defense,
+                strength: userStats.strength, 
+                magic: userStats.magic });
         if (error) setError(error.message + data);
         else {
             console.log("data saved");
@@ -151,6 +160,7 @@ const Home = ({ user }) => {
         if (error) setError(error.message + data);
         else {
             fetchQuests();
+            fetchHero();
             setCurrentAction("QuestCompleted");
         }
     }
@@ -190,7 +200,7 @@ const Home = ({ user }) => {
         console.log("Current Action " + currentAction);
         switch (currentAction) {
             case 'home':
-            return <div className={"w-screen fixed flex flex-col min-h-screen bg-gray-50"}>
+            return <div className={"w-screen fixed flex flex-col min-h-screen"}>
                 <header
                     className={
                         "flex justify-between items-center px-4 h-16 bg-gray-900"
@@ -255,7 +265,7 @@ const Home = ({ user }) => {
                     <button
                         onClick={loadNewQuest}
                         className={
-                            "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out giveMeSomeSpace"
+                            "bottomMenuButton"
                         }
                     >
                         Add
@@ -263,19 +273,19 @@ const Home = ({ user }) => {
                     <button
                         onClick={loadPartyScreen}
                         className={
-                            "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out giveMeSomeSpace"
+                            "bottomMenuButton"
                         }
                         >Party</button>
                     <button
                         onClick={loadRewardsScreen}
                         className={
-                            "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out giveMeSomeSpace"
+                            "bottomMenuButton"
                         }
                         >Rewards</button>
                     <button
                         onClick={loadAdventureScreen}
                         className={
-                            "flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out giveMeSomeSpace"
+                            "bottomMenuButton"
                         }
                         >Adventure</button>
                 </div>
@@ -295,7 +305,7 @@ const Home = ({ user }) => {
             case 'LeveledUp':
                 return <LevelUp returnHome={returnHome} levelUpInfo={levelUpInfo}></LevelUp>
             case 'Adventure':
-                return <AdventureHome updateStats={updateStats} returnHome={returnHome} setHeroInfo={setHeroInfo} heroInfo={heroInfo} user={user}></AdventureHome>
+                return <AdventureHome updateStats={updateStats} returnHome={returnHome} setHeroInfo={updateHeroInfo} heroInfo={heroInfo} user={user}></AdventureHome>
             default: 
                 return null;
         }

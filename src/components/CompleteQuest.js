@@ -13,10 +13,10 @@ const CompleteQuest = ({user, quest, completeQuest, returnHome}) => {
             (Reward will be available on the reward screen for you to claim!)
         </div>
         <div>
-            <button className={"w-half completeQuestButton floatLeft justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"} onClick={() => completeQuest(quest)}>
+            <button className={"completeQuestButton floatLeft justify-center hover:bg-blue-500 transition duration-150 ease-in-out"} onClick={() => completeQuest(quest)}>
                 Complete!
             </button>
-            <button className={"w-half cancelCompleteQuestButton floatRight justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"} onClick={returnHome}>
+            <button className={"cancelCompleteQuestButton floatRight justify-center transition duration-150 ease-in-out"} onClick={returnHome}>
                 Cancel
             </button>
         </div>
