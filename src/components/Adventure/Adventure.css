@@ -115,3 +115,17 @@ button:active {
   background: radial-gradient(circle, #ec6a6a, #e52b2b);
   box-shadow: 0px 0 5px 5px rgba(255,255,255,0.2)
 }
+
+
+@media only screen and (max-width: 600px) {
+  .HeaderMenu {
+    margin-top: -58px;
+  }
+  .MenuButton {
+    width: 142px;
+  }
+  .mainWindow {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}

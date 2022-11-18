@@ -11,7 +11,7 @@ const Hero = ({ user, heroInfo, showCharacterSheet, setError}) => {
     const displayExp = () => {
         let nextLevelXp = (heroInfo.level+1)*1000;
         return (
-        <div className={"heroXPDisplay"}>
+        <div className={"heroXPDisplay hiddenMobile"}>
             <div className={"heroCurrentXP"}>{heroInfo.experiencepoints}</div>
             <div className={"heroNextLevelXP"}>{nextLevelXp}</div>
         </div>)

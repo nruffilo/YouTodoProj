@@ -36,6 +36,11 @@ body {
   max-width: 720px;
 }
 
+.RewardScreen {
+  border-radius: 5px;
+  padding: 16px;
+}
+
 .IndividualReward input {
   height: 24px;
   width: 24px;
@@ -230,6 +235,17 @@ margin-right: 12px;
   padding-bottom: 2px;
 }
 
+.IndividualReward {
+  background-image : url("./paperbg.png");
+  box-shadow: 4px 4px #555555;
+  padding: 6px;
+  margin-bottom: 12px;
+}
+
+.RewardsFooter {
+  margin-top: 16px;
+}
+
 .questName {
   font-size: 1.2em;
   font-family: 'MedievalSharp', cursive;
@@ -284,4 +300,52 @@ canvas {
 
 .clearFix {
   clear: both;
+}
+
+@media only screen and (max-width: 600px) {
+  .logoutButton {
+    width: 64px;
+    content: "X";
+    font-size: .8em;
+  }
+  .hiddenMobile {
+    display: none !important;
+  }
+  .heroSmallEditDetails {
+    font-size: .8em;
+  }
+  .heroDisplaySmall {
+    height: 42px;
+  }
+  .bottomMenuButton {
+    font-size: .9em;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    height: 38px;
+  }
+  .listContainer {
+    padding: .5em;
+  }
+  .completeQuestButton {
+    float: none;
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .cancelCompleteQuestButton {
+    float: none;
+    display: block;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .spaceAtTheBottom {
+    margin-bottom: 32px;
+  }
+
+  .UpdateCharacterSheetButton {
+    width: 72px;
+    font-size: .9em;
+  }
 }

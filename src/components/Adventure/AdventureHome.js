@@ -32,14 +32,11 @@ function AdventureHome(props) {
   const [currentEnemy, setCurrentEnemy] = useState({});
 
   const setUser = (newUser) => {
-    console.log("setting to ");
-    console.log(newUser);
     props.setHeroInfo(newUser);
   }
 
   const updateAndSetCurrentAdventure = (adventure) => {
     //see if the adventure has an encounter, if so, process it.
-    debugger;
     if (adventure.encounter !== undefined && adventure.encounter !== null) {
       let roll = Math.floor(Math.random() * 100);
       let activeEncounter = null;
@@ -119,10 +116,8 @@ function AdventureHome(props) {
         <header className="HeaderMenu">
           <button className="MenuButton" onClick={loadUserMenu}><i className="ra ra-player"></i> You</button>
           <button className="MenuButton" onClick={goOnAdventure}><i className="ra ra-dice-two"></i> Adventure</button>
-          <br/>
           <button className="MenuButton" onClick={goTraining}><i className="ra ra-anvil"></i> Train</button>
           <button className="MenuButton" onClick={goToTavern}><i className="ra ra-bottle-vapors"></i> Tavern</button>
-          <br/>
           <button className="MenuButton" onClick={goToQuests}><i className="ra ra-bridge"></i> Back</button>
         </header>
         : null

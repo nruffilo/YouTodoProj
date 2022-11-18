@@ -10,6 +10,7 @@ function Tavern(props) {
         tmpUser.gold -= goldCost;
         tmpUser.currentHP += hpGain;
         if (tmpUser.currentHP > tmpUser.maxHP) tmpUser.currentHP = tmpUser.maxHP;
+        tmpUser.updateStats = true;
         props.setUser(tmpUser);
     }
 
@@ -21,7 +22,8 @@ function Tavern(props) {
             <button onClick={() => {buyDrink(2, 5)}}>Buy Ale (2gp, heals 5hp)</button>
             <button onClick={() => {buyDrink(5, 15)}}>Buy Kombucha (5gp, heals 15hp)</button>
             <br/><br/>
-            You currently have <b>{props.user.gold}</b> gold.
+            <h2>You currently have <b>{props.user.gold}</b> gold.<br/>
+            HP: <b>{props.user.currentHP} / {props.user.maxHP}</b></h2>
         </div>
     )
 

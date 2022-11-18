@@ -11,17 +11,21 @@ const CharacterSheet = ({user, returnHome, setHeroInfo, heroInfo }) => {
     const updateDisplayName = async () => {
         let displayName = displayNameRef.current.value;
         console.log("Updating display name to " + displayName);
+        console.log(heroInfo);
         if (displayName.length <= 1) {
             setError("You need at least 1 character for your display name");
         } else {
-            let { data: updatedDisplayName, error } = await supabase
-                .from("userdetail")
-                .update({displayname: displayName});
-            if (error) setError(error.message + updatedDisplayName);
-            else {
-                heroInfo.displayname = displayName;
-                setHeroInfo(heroInfo);
+            const { error } = await supabase
+            .from("userdetail")
+            .update({displayname: displayName})
+            .eq('user_id',heroInfo.myuserid);
+            if (error) { 
+                setError(error.message);
+                return false;
             }
+            let newHero = heroInfo;
+            newHero.displayname = displayName;
+            setHeroInfo(newHero);
         }
     }    
 
@@ -32,7 +36,8 @@ const CharacterSheet = ({user, returnHome, setHeroInfo, heroInfo }) => {
         } else {
             let { data: updatedUrl, error } = await supabase
                 .from("userdetail")
-                .update({avatarurl: avatarUrl});
+                .update({avatarurl: avatarUrl})
+                .eq('user_id',heroInfo.myuserid);
             if (error) setError(error.message + updatedUrl);
             else {
                 heroInfo.avatarurl = avatarUrl;
