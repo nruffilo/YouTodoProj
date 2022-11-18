@@ -175,7 +175,6 @@ function Adventure(props) {
                 if (optionalReward !== undefined && optionalReward !== null) {
                     nextAdventureResult.reward = optionalReward;
                 }
-                debugger;
                 if (optionalActions !== undefined && optionalActions !== null) {
                     nextAdventureResult.actions = optionalActions;
                 }
