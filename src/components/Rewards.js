@@ -33,7 +33,7 @@ const Rewards = ({ rewards, returnHome, loadRewards }) => {
                                 </div>
                         ))
                     ) : ( 
-                        <div>You have redeemed all your rewards</div> 
+                        <div className={"IndividualReward"}>You have redeemed all your rewards</div> 
                     )
                     }
                 </div>

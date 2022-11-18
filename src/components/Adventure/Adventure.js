@@ -1,6 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import { CommonAdventures } from './CommonAdventures';
-import { AdventureList } from "./AdventureList";
 import { supabase } from '../../lib/api';
 
 function Adventure(props) {
@@ -10,6 +8,7 @@ function Adventure(props) {
     const [enemyAttack, setEnemyAttack] = useState();
     const [enemyDefense, setEnemyDefense] = useState();
     const [battleDescription, setBattleDescription] = useState();
+    const [adventureNotice, setAdventureNotice] = useState();
 
     const attack = () => {
         let tmpYourAttack = Math.floor(Math.random()*(props.user.strength/2)) + Math.floor(props.user.strength/2);
@@ -76,6 +75,7 @@ function Adventure(props) {
         tmpEnemy.currentHP -= damageToEnemy;
         tmpYou.currentHP -= damageToYou;
         props.setCurrentEnemy(tmpEnemy);
+        tmpYou.updateStats = true;
         props.setUser(tmpYou);
 
         //determine if there is a fight winner, if so, end the combat.
@@ -83,14 +83,13 @@ function Adventure(props) {
             props.setAction("end");            
         }
         if (tmpEnemy.currentHP <= 0) {
-            let nextAdventure = CommonAdventures.CombatComplete;
+            let actions = [];
             if (props.currentAdventure.returnAction !== undefined) {
-                nextAdventure.actions.push(props.currentAdventure.returnAction);
+                actions.push(props.currentAdventure.returnAction);
             } else {
-                nextAdventure.actions.push({text: "Return Home",action:"complete"});
+                actions.push({actiontext: "Return Home",adventureid:0});
             }
-            nextAdventure.reward = tmpEnemy.reward;
-            props.setCurrentAdventure(nextAdventure);
+            loadAdventureById(15, actions, tmpEnemy.reward);
         }
 
     }
@@ -100,6 +99,18 @@ function Adventure(props) {
     }
 
     const goOnAdventure = async () => {
+        //check to see if the user has at least 10gp
+        if (props.user.gold < 10) {
+            setAdventureNotice(<p>You do not have enough gold.  Complete more quests (tasks) to earn more gold.</p>);
+            return false;
+        } else {
+            //if user HAS 10 gp, take it
+            let tmpUser = props.user;
+            tmpUser.updateStats = true;
+            tmpUser.gold = tmpUser.gold - 10;
+            props.setUser(tmpUser);
+        }        
+
         let { data: nextAdventureResult, error } = await supabase
             .from("adventure")
             .select("*")
@@ -116,7 +127,7 @@ function Adventure(props) {
             if (error) {
                 console.log("error",error);
             } else {
-                actionResult.map((action) => {
+                actionResult.forEach((action) => {
                     if (action.conditions !== null) action.conditions = JSON.parse(action.conditions);
                 });
                 nextAdventureResult[newAdvNum].actions = actionResult;
@@ -136,7 +147,7 @@ function Adventure(props) {
         nextStep(nextAction);
     }
 
-    const loadAdventureById = async (adventureId) => {
+    const loadAdventureById = async (adventureId, optionalActions, optionalReward) => {
         let { data: nextAdventureResult, error } = await supabase
             .from("adventure")
             .select("*")
@@ -153,13 +164,29 @@ function Adventure(props) {
             if (error) {
                 console.log("error",error);
             } else {
-                actionResult.map((action) => {
+                actionResult.forEach((action) => {
                     if (action.conditions !== null) action.conditions = JSON.parse(action.conditions);
                 });
                 nextAdventureResult.actions = actionResult;
                 //convert any json text to json
                 if (nextAdventureResult.reward !== null) {
                     nextAdventureResult.reward = JSON.parse(nextAdventureResult.reward);
+                }
+                if (optionalReward !== undefined && optionalReward !== null) {
+                    nextAdventureResult.reward = optionalReward;
+                }
+                if (optionalActions !== undefined && optionalActions !== null) {
+                    nextAdventureResult.actions = optionalActions;
+                }
+                //check to see if there is an enemy to load
+                if (nextAdventureResult.adventureenemyid !== null) {
+                    let { data: enemy,enemyError } = await supabase
+                        .from("adventureenemy").select('*').eq("adventureenemyid",nextAdventureResult.adventureenemyid).single();
+                    if (enemyError) {
+                        console.log("error", error);
+                    }
+                    enemy.reward = JSON.parse(enemy.rewards);
+                    nextAdventureResult.enemy = enemy;
                 }
                 
                 props.setCurrentAdventure(nextAdventureResult);
@@ -182,7 +209,7 @@ function Adventure(props) {
                     <h2>{event.heading}</h2>
                     {
                         event.image !== null ?
-                            <div className="adventureImage"><img src={`/images/${event.image}`}/></div>
+                            <div className="adventureImage"><img alt='adventure thumbnail' src={`/images/${event.image}`}/></div>
                         : null
                     }
                     <p className="adventureStoryText">{event.story}</p>
@@ -199,7 +226,6 @@ function Adventure(props) {
                         : null
                     }
                     { event.actions.map(action => {
-                        console.log(action);
                         let passedConditions = true;
                         if (action.conditions !== null) {
                             for (let idx in action.conditions) {
@@ -227,22 +253,24 @@ function Adventure(props) {
                                 </>
                             }
                         }
+                        return <></>;
                     })}
                     </>
             //a combat event STARTS the battle, otherwise you'd be stuck in a loop of activity.
             case "combat":
-                props.setCurrentAdventure({
-                    type: "battle"                    
-                });
                 props.setCurrentEnemy({
-                    name: event.enemyName,
-                    currentHP: event.stats.hp,
-                    maxHP: event.stats.hp,
-                    attack: event.stats.attack,
-                    defense: event.stats.defense,
-                    magic: event.stats.magic,
-                    reward: event.stats.reward
+                    name: event.enemy.enemyName,
+                    currentHP: event.enemy.hp,
+                    maxHP: event.enemy.hp,
+                    attack: event.enemy.attack,
+                    defense: event.enemy.defense,
+                    magic: event.enemy.magic,
+                    reward: event.enemy.reward
                 });
+                props.setCurrentAdventure({
+                    adventuretype   : "battle"                    
+                });
+
                 return <>
                 </>
 
@@ -268,7 +296,9 @@ function Adventure(props) {
                 <>
                     <h2>Go on an Adventure</h2>
                     <p>Life is full of adventure.  By stepping foot out of town, you open yourself to any number of possible adventures.  Some wonderful, some scary, and some very dangerous.  You never know what you will experience, except that it will be an adventure.</p>
-                    <button className="actionButton" onClick={goOnAdventure}>Adventure!</button>
+                    <p>Adventures will cost you 10 gold, for supplies.</p>
+                    {adventureNotice}
+                    <button className="actionButton" onClick={goOnAdventure}>Adventure! (10gp)</button>
                 </>
                 : 
                     renderEvent(props.currentAdventure)
