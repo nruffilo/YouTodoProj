@@ -273,7 +273,7 @@ begin
  
   -- check to see if the user is an admin of the party
   SELECT RoleId INTO userRoleId FROM UserParty WHERE userparty.PartyId = insertpartyid AND user_id = userId;
-  IF LEN(userChecksum) < 4 THEN
+  IF LENGTH(userChecksum) < 4 THEN
     RETURN -1;
   END IF;
   -- get the USER of the email requested

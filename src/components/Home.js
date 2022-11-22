@@ -148,6 +148,7 @@ const Home = ({ user }) => {
     }
 
     const loadPartyScreen = () => {
+        fetchPartyUsers();
         setCurrentAction("Party");
     }
     const showCharacterSheet = () => {
