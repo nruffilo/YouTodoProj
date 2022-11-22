@@ -51,7 +51,10 @@ const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
                     expiredate: null
                 };
                 console.log(newQuest);
-                setQuests([newQuest, ...quests]);
+                //if the quest user is the same as us, then add it
+                if (questUserId === user.id) {
+                    setQuests([newQuest, ...quests]);
+                }
                 setError(null);
                 newQuestTextRef.current.value = "";
                 newQuestDescriptionRef.current.value = "";

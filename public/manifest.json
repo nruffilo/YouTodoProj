@@ -1,6 +1,6 @@
 {
-  "short_name": "CRA Supabase TodoList Example",
-  "name": "Create React App Supabase TodoList Example",
+  "short_name": "YouTodo",
+  "name": "The best Task Management RPG for the whole family",
   "icons": [
     {
       "src": "favicon.ico",

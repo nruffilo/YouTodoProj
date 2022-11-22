@@ -39,7 +39,7 @@ function Adventure(props) {
 
     useEffect(() => {
         setBattleDescription(<>
-        <br/>The battle was epic.  You attacked for {yourAttack}
+        <br/>The battle was epic.  You attacked for {yourAttack} 
         {
             yourMagic > 0 ?
                 <>and used magic for {yourMagic} </>
@@ -76,20 +76,25 @@ function Adventure(props) {
         tmpYou.currentHP -= damageToYou;
         props.setCurrentEnemy(tmpEnemy);
         tmpYou.updateStats = true;
-        props.setUser(tmpYou);
 
         //determine if there is a fight winner, if so, end the combat.
         if (tmpYou.currentHP <= 0) {
-            props.setAction("end");            
-        }
-        if (tmpEnemy.currentHP <= 0) {
+            let actions = [];
+            actions.push({actiontext: "Return Home",adventureid:0});
+            tmpYou.currentHP = 1;
+            props.setUser(tmpYou);
+            loadAdventureById(18, actions, tmpEnemy.reward);
+        } else if (tmpEnemy.currentHP <= 0) {
             let actions = [];
             if (props.currentAdventure.returnAction !== undefined) {
                 actions.push(props.currentAdventure.returnAction);
             } else {
                 actions.push({actiontext: "Return Home",adventureid:0});
             }
+            props.setUser(tmpYou);
             loadAdventureById(15, actions, tmpEnemy.reward);
+        } else {
+            props.setUser(tmpYou);
         }
 
     }
@@ -212,7 +217,7 @@ function Adventure(props) {
                             <div className="adventureImage"><img alt='adventure thumbnail' src={`/images/${event.image}`}/></div>
                         : null
                     }
-                    <p className="adventureStoryText">{event.story}</p>
+                    <p className="adventureStoryText" dangerouslySetInnerHTML={{__html: event.story}}></p>
                     {
                         event.rewardDisplay !== undefined ?
                         <b>Rewards:</b>
@@ -225,6 +230,7 @@ function Adventure(props) {
                             })
                         : null
                     }
+                    <div className="adventureActionButtons">
                     { event.actions.map(action => {
                         let passedConditions = true;
                         if (action.conditions !== null) {
@@ -255,6 +261,7 @@ function Adventure(props) {
                         }
                         return <></>;
                     })}
+                    </div>
                     </>
             //a combat event STARTS the battle, otherwise you'd be stuck in a loop of activity.
             case "combat":
@@ -298,7 +305,9 @@ function Adventure(props) {
                     <p>Life is full of adventure.  By stepping foot out of town, you open yourself to any number of possible adventures.  Some wonderful, some scary, and some very dangerous.  You never know what you will experience, except that it will be an adventure.</p>
                     <p>Adventures will cost you 10 gold, for supplies.</p>
                     {adventureNotice}
-                    <button className="actionButton" onClick={goOnAdventure}>Adventure! (10gp)</button>
+                    <div className="adventureActionButtons">
+                        <button className="actionButton" onClick={goOnAdventure}>Adventure! (10gp)</button>
+                    </div>
                 </>
                 : 
                     renderEvent(props.currentAdventure)
