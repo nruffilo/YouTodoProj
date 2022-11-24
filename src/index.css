@@ -24,9 +24,7 @@ body {
 }
 
 .YourInviteCode {
-  display: inline-block;
-  float: right;
-  margin-right: 8px;
+  font-weight: bold;
 }
 
 .addNewQuest, .confirmQuestCompletion, .templateScreen {
@@ -99,6 +97,12 @@ body {
   font-size: 1.5em;
   margin-left: 12px;
   margin-top: 12px;
+}
+
+.templateScreen p {
+  text-indent: 2em;
+  padding-left: 16px;
+  padding-right: 16px;
 }
 
 .partyMemberList {
@@ -207,6 +211,22 @@ body {
   border-bottom: 1px solid #000000;
 }
 
+.CreatePartyFooter {
+  text-align: center;
+}
+
+.regularInput {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.buttonRightOfInput {
+  display: inline-block;
+  width: 158px;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
 .completeQuestButton {
   
 }
@@ -293,7 +313,7 @@ canvas {
 .BackToQuestsFromQuestComplete {
   position: absolute;
   background-color: #CCFFCC;
-  color: #000000;
+  color: #FFFFFF;
   bottom: 50px;
   right: 20px;
 }
