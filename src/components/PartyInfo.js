@@ -19,21 +19,21 @@ const PartyInfo = ({partyInfo,addPartyUser, partyUsersMap, returnHome})  => {
                             <span>No members of this party</span>
                         )
                     } 
-                    <div className={"m-4 mt-0 h-10"}>
+                    <div className={""}>
                         <label>
                             <input
                                 ref={newPartyUserTextRef}
                                 type="text"
                                 placeholder="MemberName#1234"
                                 className={
-                                    "floatLeft bg-gray-200 border px-2 border-gray-300 w-1/2 mr-4"
+                                    "regularInput bg-gray-200 border px-2 border-gray-300 w-1/2"
                                 }
                             />
                         </label>
                         <button
                             onClick={addPartyUserForThisParty}
                             className={
-                                "floatRight w-1/4 justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
+                                "buttonRightOfInput w-1/4 justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-500 focus:outline-none focus:border-blue-700 focus:shadow-outline-blue active:bg-blue-700 transition duration-150 ease-in-out"
                             }
                         >
                             Add to Party

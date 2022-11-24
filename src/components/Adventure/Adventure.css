@@ -134,6 +134,12 @@ button:active {
   text-align: left;
 }
 
+.trainingButton {
+  width: 168px;
+  margin: 6px;
+  display: inline-block;
+}
+
 .adventureActionButtons {
   text-align: center;
   padding-bottom: 24px;
