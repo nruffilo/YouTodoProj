@@ -18,7 +18,7 @@ const Quest = ({ quest, onDelete, onComplete }) => {
 
     return (
             <div key={quest.questid}
-                    className={"p-3 flex align-center justify-between border questList"}
+                    className={"flex align-center justify-between border questList"}
                 >
                     <div className={"flex-grow"}>
                         <input
@@ -49,7 +49,7 @@ const Quest = ({ quest, onDelete, onComplete }) => {
                             : ''
                         }
                     </div>
-                    <button
+                    <span
                         className={"cancelButton"}
                         onClick={(e) => {
                             e.preventDefault();
@@ -58,7 +58,7 @@ const Quest = ({ quest, onDelete, onComplete }) => {
                         }}
                     >
                         <i className="ra ra-cancel"></i>
-                    </button>
+                    </span>
                 </div>
     );
 };

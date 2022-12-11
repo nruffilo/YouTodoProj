@@ -419,7 +419,9 @@ begin
   IF EXISTS (SELECT questId FROM userquest WHERE questid = completedquestid AND user_id = userId) THEN
     SELECT reward, size INTO QuestReward, QuestSize FROM quest WHERE questid = completedquestid;
     UPDATE quest SET completeddate = current_date, queststatus = 2 WHERE questid = completedquestid;
-    INSERT INTO reward (user_id, reward) VALUES (userId, QuestReward);
+    IF (QuestReward != '') THEN
+      INSERT INTO reward (user_id, reward) VALUES (userId, QuestReward);
+    END IF;
     CASE 
       WHEN QuestSize = 1 THEN xpValue = 100;
       WHEN QuestSize = 2 THEN xpValue = 400;

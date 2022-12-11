@@ -19,28 +19,20 @@ const Party = ({user, returnHome, heroInfo, quests, setQuests, partyUsers, fetch
             }
             partyUsersMapClean[partyUser.partyid].PartyUsers.push({user_id: partyUser.partyuserid, displayname: partyUser.displayname});
         });
-        console.log("Setting party user map to:");
-        console.log(partyUsersMapClean);
         setPartyUsersMap(partyUsersMapClean);
     };
 
 
     useEffect(() => {
         sortPartyUsersMap(); 
-        console.log("USER FROM PARTY");           
-        console.log(user);
     }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 
     //const [quests, setQuests] = useState([]);
     const addPartyUser = async (partyId, userText) => {
-        console.log("About to add ");
-        console.log(partyId);
-        console.log(userText);
         let { data: newPartyUserId, error } = await supabase
             .rpc("addpartymember", {insertpartyid: partyId, newmembertext: userText});
         if (error) {
-            console.log(newPartyUserId);
             console.log("error", error);
             setError(error);
         } else {
@@ -53,7 +45,6 @@ const Party = ({user, returnHome, heroInfo, quests, setQuests, partyUsers, fetch
         let {data: newPartyId, error } = await supabase.rpc("createnewparty",{partyname: newPartyTextRef.current.value});
         if (error) {
             console.log("error",error);
-            console.log(newPartyId);
             setError(error);
         } else {
             fetchPartyUsers();

@@ -8,8 +8,10 @@ import CharacterSheet from "./CharacterSheet";
 import Rewards from "./Rewards";
 import CompleteQuest from "./CompleteQuest";
 import QuestCompleted from "./QuestCompleted";
+import ConfirmDeleteQuest from "./ConfirmDeleteQuest";
 import Party from "./Party";
 import LevelUp from "./LevelUp";
+import QuestSort from "./QuestSort";
 import AdventureHome from "./Adventure/AdventureHome";
 import 'rpg-awesome/css/rpg-awesome.min.css';
 
@@ -20,10 +22,12 @@ const Home = ({ user }) => {
     const [rewards, setRewards] = useState([]);
     const [errorText, setError] = useState("");
     const [currentAction, setCurrentAction] = useState("home");
+    const [questSort, setQuestSort] = useState("none");
     const [heroInfo, setHeroInfo] = useState({});
     const [questToComplete, setQuestToComplete] = useState({});
     const [partyUsers, setPartyUsers] = useState([]);
     const [levelUpInfo, setLevelUpInfo] = useState([]);
+    const [questToDelete, setQuestToDelete] = useState([]);
 
     
     useEffect(() => {
@@ -51,8 +55,46 @@ const Home = ({ user }) => {
         loadRewards().catch(console.error);
     }, []);
 
+    const questSortFilter = (a, b) => {
+        if (questSort === "sizeAsc") {
+            if (a.size > b.size) {
+                return 1;
+            } else if (a.size === b.size) {
+                return 0;
+            } else {
+                return -1;
+            };
+        } else if (questSort === "sizeDesc") {
+            if (a.size < b.size) {
+                return 1;
+            } else if (a.size === b.size) {
+                return 0;
+            } else {
+                return -1;
+            };
+        } else if (questSort === "newest") {
+            if (a.questid < b.questid) {
+                return -1;
+            } else {
+                return 1;
+            };
+        } else if (questSort === "oldest") {
+            if (a.questid < b.questid) {
+                return 1;
+            } else {
+                return -1;
+            };
+        } else {
+            return 1;
+        }
+    }
+
+    useEffect(() => {
+        let sortedQuests = quests.sort(questSortFilter);
+        setQuests(sortedQuests);
+    }, [questSort])
+
     const updateHeroInfo = (hero) => {
-        console.log(hero);
         if (hero.updateStats) {
             updateStats(hero);
             hero.updateStats = null;
@@ -88,7 +130,6 @@ const Home = ({ user }) => {
                 setLevelUpInfo(levelUpInfo);
                 setCurrentAction("LeveledUp");
             }
-            console.log(levelUpInfo);
         }
 
     }
@@ -135,12 +176,15 @@ const Home = ({ user }) => {
             setError(error);
         }
         else setQuests(quests);
-        console.log(quests);
 
     }
 
     const returnHome = () => {
         setCurrentAction("home");
+    }
+
+    const loadQuestSort = () => {
+        setCurrentAction("QuestSort");
     }
 
     const loadRewardsScreen = () => {
@@ -167,6 +211,11 @@ const Home = ({ user }) => {
         }
     }
 
+    const updateQuestSort = (newSort) => {
+        setQuestSort(newSort);
+        returnHome();
+    }
+
     const loadNewQuest = () => {
         setCurrentAction("NewQuest");
     }
@@ -178,6 +227,11 @@ const Home = ({ user }) => {
     const confirmCompleteQuest = (quest) => {
         setQuestToComplete(quest);
         setCurrentAction("CompleteQuest");
+    }
+
+    const confirmDeleteQuest = (id) => {
+        setCurrentAction("ConfirmDeleteQuest");
+        setQuestToDelete(quests.find(item => item.questid === id));
     }
 
     const deleteQuest = async (id) => {
@@ -199,7 +253,6 @@ const Home = ({ user }) => {
         setRecoveryToken={setRecoveryToken}
         />
     } else {
-        console.log("Current Action " + currentAction);
         switch (currentAction) {
             case 'home':
             return <div className={"w-screen fixed flex flex-col min-h-screen"}>
@@ -229,6 +282,7 @@ const Home = ({ user }) => {
                     className={"flex flex-col flex-grow p-4 listContainer"}
                     
                 >
+                    <button className="SortButton" onClick={loadQuestSort}>Sort</button>
                     <div
                         className={`p-2 border grid gap-2 ${
                             quests.length ? "auto-rows-min" : ""
@@ -239,7 +293,7 @@ const Home = ({ user }) => {
                                 <Quest 
                                     questId={quest.questid}
                                     quest={quest}
-                                    onDelete={() => deleteQuest(quest.questid)}
+                                    onDelete={() => confirmDeleteQuest(quest.questid)}
                                     onComplete={() => confirmCompleteQuest(quest)}
                                 />
                             ))
@@ -263,7 +317,7 @@ const Home = ({ user }) => {
                         </div>
                     )}
                 </div>
-                <div className={"flex m-4 mt-0 h-10"}>
+                <div className={"flex m-4 mt-0 h-10 buttonsCentered"}>
                     <button
                         onClick={loadNewQuest}
                         className={
@@ -308,6 +362,10 @@ const Home = ({ user }) => {
                 return <LevelUp returnHome={returnHome} levelUpInfo={levelUpInfo}></LevelUp>
             case 'Adventure':
                 return <AdventureHome updateStats={updateStats} returnHome={returnHome} setHeroInfo={updateHeroInfo} heroInfo={heroInfo} user={user}></AdventureHome>
+            case 'QuestSort':
+                return <QuestSort returnHome={returnHome} setQuestSort={updateQuestSort} currentSortType={questSort}></QuestSort>
+            case 'ConfirmDeleteQuest':
+                return <ConfirmDeleteQuest returnHome={returnHome} questToDelete={questToDelete} deleteQuest={deleteQuest}></ConfirmDeleteQuest>
             default: 
                 return null;
         }
