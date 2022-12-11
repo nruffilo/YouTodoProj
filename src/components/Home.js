@@ -95,7 +95,6 @@ const Home = ({ user }) => {
     }, [questSort])
 
     const updateHeroInfo = (hero) => {
-        console.log(hero);
         if (hero.updateStats) {
             updateStats(hero);
             hero.updateStats = null;
@@ -131,7 +130,6 @@ const Home = ({ user }) => {
                 setLevelUpInfo(levelUpInfo);
                 setCurrentAction("LeveledUp");
             }
-            console.log(levelUpInfo);
         }
 
     }
@@ -178,7 +176,6 @@ const Home = ({ user }) => {
             setError(error);
         }
         else setQuests(quests);
-        console.log(quests);
 
     }
 
@@ -256,7 +253,6 @@ const Home = ({ user }) => {
         setRecoveryToken={setRecoveryToken}
         />
     } else {
-        console.log("Current Action " + currentAction);
         switch (currentAction) {
             case 'home':
             return <div className={"w-screen fixed flex flex-col min-h-screen"}>

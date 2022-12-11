@@ -15,7 +15,6 @@ const Rewards = ({ rewards, returnHome, loadRewards }) => {
 //            .from("reward").update({redemptionstatus: 1, redemptiondate: new Date()}).eq('rewardid',rewardId);
         if (error) {
             console.log("error", error);
-            console.log(data);
             //console.log(updated);
             setError("There was an error updating");
         }

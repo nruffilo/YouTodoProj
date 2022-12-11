@@ -50,7 +50,6 @@ const NewQuest = ({user, returnHome, quests, setQuests, partyUsers}) => {
                     completeddate: null,
                     expiredate: null
                 };
-                console.log(newQuest);
                 //if the quest user is the same as us, then add it
                 if (questUserId === user.id) {
                     setQuests([newQuest, ...quests]);
