@@ -19,6 +19,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.questDescription {
+  font-size: 1em;
+}
+
 .noFlexGrow {
   flex-grow:0;
 }
@@ -174,10 +178,13 @@ body {
 }
 
 .cancelButton {
-  width: 38px;
+  width: 22px;
   padding-top: 2px;
   padding-bottom: 2px;
-  height: 38px;
+  height: 22px;
+  position: absolute;
+  top:0;
+  right:0;
 }
 
 .bottomMenuButton {
@@ -231,23 +238,35 @@ body {
   
 }
 
+.characterSheetLabel {
+  display: block;
+}
+
+.characterSheetInput {
+  width: 100%;
+}
+
 .giveMeSomeSpace {
 margin-right: 12px;
 }
 
 .listContainer {
   max-height: 78vh;
+  max-width: 864px;
+  margin-left: auto;
+  margin-right: auto;
+
 }
 
 .questList {
   background-image : url("./paperbg.png");
   box-shadow: 4px 4px #555555;
+  position: relative;
 }
 
 
 .questList div {
   display: inline-block;
-  margin-left: 6px;
 /*  background-color: #CCCCCC;*/
   padding-left: 6px;
   padding-right: 6px;
@@ -267,10 +286,11 @@ margin-right: 12px;
 }
 
 .questName {
-  font-size: 1.2em;
+  font-size: 1.1em;
   font-family: 'MedievalSharp', cursive;
   font-weight: bold;
   width: 80%;
+  margin-left: -6px;
 }
 .questSize {
   font-size: .8em;
@@ -290,6 +310,17 @@ margin-right: 12px;
   width: 100%;
 }
 
+.UpdateCharacterSheetButton {
+  width: 140px;
+  font-size: .9em;
+}
+
+
+.buttonsCentered {
+  text-align: center;
+  justify-content: center;
+}
+
 .cancelCompleteQuestButton {
   color: #FF0000;
 }
@@ -298,6 +329,16 @@ margin-right: 12px;
 canvas {
 	cursor: crosshair;
 	display: block;
+}
+
+.SortButton {
+  width: 72px;
+  margin-bottom: -18px;
+  z-index: 1000;
+  margin-top: -16px;
+  font-size: .8em;
+  height: 32px;
+  padding-top: 4px;
 }
 
 .QuestCompletedScreen {
@@ -322,6 +363,10 @@ canvas {
   clear: both;
 }
 
+button.active {
+  background-color: #3333FF;
+}
+
 @media only screen and (max-width: 600px) {
   .logoutButton {
     width: 64px;
@@ -343,9 +388,6 @@ canvas {
     padding-bottom: 4px;
     height: 38px;
   }
-  .listContainer {
-    padding: .5em;
-  }
   .completeQuestButton {
     float: none;
     display: block;
@@ -364,8 +406,4 @@ canvas {
     margin-bottom: 32px;
   }
 
-  .UpdateCharacterSheetButton {
-    width: 72px;
-    font-size: .9em;
-  }
 }

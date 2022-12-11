@@ -38,16 +38,18 @@ function Adventure(props) {
     }
 
     useEffect(() => {
-        setBattleDescription(<>
-        <br/>The battle was epic.  You attacked for {yourAttack} 
-        {
-            yourMagic > 0 ?
-                <>and used magic for {yourMagic} </>
-                : null
+        if (yourAttack !== undefined) { 
+            setBattleDescription(<>
+            <br/>The battle was epic.  You attacked for {yourAttack} 
+            {
+                yourMagic > 0 ?
+                    <>and used magic for {yourMagic} </>
+                    : null
+            }
+            and defended {yourDefense}.
+            The enemy attacked for {enemyAttack} and defended {enemyDefense}
+            </>);
         }
-         and defended {yourDefense}.
-         The enemy attacked for {enemyAttack} and defended {enemyDefense}
-        </>);
     },[yourAttack,yourDefense,enemyAttack,enemyDefense, yourMagic])
 
     const opponentAct = (yourAttack, yourMagicAttack, yourDefense) => {
@@ -134,6 +136,7 @@ function Adventure(props) {
             } else {
                 actionResult.forEach((action) => {
                     if (action.conditions !== null) action.conditions = JSON.parse(action.conditions);
+                    if (action.randomaction !== null) action.randomaction = JSON.parse(action.randomaction);
                 });
                 nextAdventureResult[newAdvNum].actions = actionResult;
                 props.setCurrentAdventure(nextAdventureResult[newAdvNum]);
@@ -249,13 +252,13 @@ function Adventure(props) {
                         };
                         if (passedConditions)
                         {
-                            if (action.adventureid !== undefined) {
+                            if (action.adventureid !== undefined && action.adventureid !== null) {
                                 return <>
                                 <button onClick={() => nextStep(action.adventureid)}>{action.actiontext}</button>
                                 </>
-                            } else if (action.randomAction !== undefined) {
+                            } else if (action.randomaction !== undefined) {
                                 return <>
-                                <button onClick={() => nextStepRandom(action.randomAction)}>{action.actiontext}</button>
+                                <button onClick={() => nextStepRandom(action.randomaction)}>{action.actiontext}</button>
                                 </>
                             }
                         }

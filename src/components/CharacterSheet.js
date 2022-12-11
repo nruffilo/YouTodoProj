@@ -10,8 +10,6 @@ const CharacterSheet = ({user, returnHome, setHeroInfo, heroInfo }) => {
 
     const updateDisplayName = async () => {
         let displayName = displayNameRef.current.value;
-        console.log("Updating display name to " + displayName);
-        console.log(heroInfo);
         if (displayName.length <= 1) {
             setError("You need at least 1 character for your display name");
         } else {
@@ -46,21 +44,22 @@ const CharacterSheet = ({user, returnHome, setHeroInfo, heroInfo }) => {
         }
     }   
 
-    return (<div className={"displayCharacterSheet"}>
+    return (<div className={"displayCharacterSheet templateScreen"}>
         <h2>Your Character Sheet</h2>
                 <div className={"m-4 mt-0 h-10"}>
                     <label className={"characterSheetLabel"}>
                         Hero Name:
-                        <input
-                            ref={displayNameRef}
-                            type="text"
-                            defaultValue={heroInfo.displayname}
-                            className={
-                                "bg-gray-200 border px-2 border-gray-300 mr-4"
-                            }
-                        />
-                        <button className={"UpdateCharacterSheetButton"} onClick={updateDisplayName}>Update</button>
                     </label>
+
+                    <input
+                        ref={displayNameRef}
+                        type="text"
+                        defaultValue={heroInfo.displayname}
+                        className={
+                            "bg-gray-200 border px-2 border-gray-300 mr-4 characterSheetInput"
+                        }
+                    />
+                    <button className={"UpdateCharacterSheetButton"} onClick={updateDisplayName}>Update</button>
                     <label className={"characterSheetLabel"}>
                         Avatar URL:
                         <input
@@ -68,7 +67,7 @@ const CharacterSheet = ({user, returnHome, setHeroInfo, heroInfo }) => {
                             defaultValue={heroInfo.avatarurl}
                             type="text"
                             className={
-                                "bg-gray-200 border px-2 border-gray-300 mr-4"
+                                "bg-gray-200 border px-2 border-gray-300 mr-4 characterSheetInput"
                             }
                         />
                         <button className={"UpdateCharacterSheetButton"} onClick={updateAvatarUrl}>Update</button>
